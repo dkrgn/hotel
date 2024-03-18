@@ -18,4 +18,11 @@ public interface RoomRepo extends JpaRepository<Room, Integer> {
     @Query(value = "SELECT * FROM rooms WHERE capacity = :capacity", nativeQuery = true)
     Optional<List<Room>> getRoomWithCapacity(int capacity);
 
+    @Query(value = "SELECT * FROM rooms WHERE is_occupied = :isOccupied", nativeQuery = true)
+    Optional<List<Room>> findRoomsByOccupancyStatus(boolean isOccupied);
+
+    @Query(value = "SELECT * FROM rooms WHERE cost = :cost", nativeQuery = true)
+    Optional<List<Room>> findRoomsByCost(int cost);
+
+
 }

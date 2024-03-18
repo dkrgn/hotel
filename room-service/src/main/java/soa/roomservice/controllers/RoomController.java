@@ -34,9 +34,16 @@ public class RoomController {
             @RequestParam("id") int id,
             @RequestParam("roomNumber") String roomNumber,
             @RequestParam("description") String description,
-            @RequestParam("capacity") int capacity
+            @RequestParam("capacity") int capacity,
+            @RequestParam("isOccupied") boolean isOccupied,
+            @RequestParam("cost") int cost
     ) {
-        return ResponseEntity.ok(roomService.saveRoom(id, roomNumber, description, capacity));
+        return ResponseEntity.ok(roomService.saveRoom(id, roomNumber, description, capacity, isOccupied, cost));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Room>> findRoomsByOccupancy(@RequestParam("isOccupied") boolean isOccupied){
+        return ResponseEntity.ok(roomService.findRoomByOccupancy(isOccupied));
     }
 
     @DeleteMapping

@@ -23,8 +23,12 @@ public class RoomService {
         return roomRepo.getRoomWithCapacity(capacity).orElse(new ArrayList<>());
     }
 
-    public Room saveRoom(int id, String roomNumber, String description, int capacity){
-        Room room = new Room(id, roomNumber, description, capacity);
+    public List<Room> findRoomByOccupancy(boolean isOccupied){
+        return roomRepo.findRoomsByOccupancyStatus(isOccupied).orElse(new ArrayList<>());
+    }
+
+    public Room saveRoom(int id, String roomNumber, String description, int capacity, boolean isOccupied, int cost){
+        Room room = new Room(id, roomNumber, description, capacity, isOccupied, cost);
         return roomRepo.save(room);
     }
 

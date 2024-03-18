@@ -32,4 +32,12 @@ public class Room {
     @ColumnDefault("1")
     private Integer capacity;
 
+    @NonNull
+    @Column(name = "is_occupied", nullable = false)
+    private boolean isOccupied;
+
+    @NonNull
+    @Column(name = "cost", nullable = false)
+    private int cost;
+
 }
