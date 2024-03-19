@@ -1,7 +1,9 @@
 package soa.userservice.services;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import soa.userservice.dto.UserRequest;
 import soa.userservice.dto.UserResponse;
 import soa.userservice.models.User;
@@ -12,6 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
+@Transactional
 public class UserService {
 
     private final UserRepo userRepo;
@@ -29,12 +33,19 @@ public class UserService {
         return list.stream().map(this::buildResponse).collect(Collectors.toList());
     }
 
-    public UserResponse saveUser(int id, String firstName, String lastName, String email, String mobileNumber, String password) {
-        User user = new User(id, firstName, lastName, email, mobileNumber, password);
+    public UserResponse saveUser(UserRequest request) {
+        User user = User.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .mobileNumber(request.getMobileNumber())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .build();
         userRepo.save(user);
-        User fromDB = userRepo.getUserById(id).orElseThrow(
+        User fromDB = userRepo.getUserById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("User was not saved! Please try again.")
         );
+        log.info("The user with id {} was successfully saved!", user.getId());
         return buildResponse(fromDB);
     }
 
@@ -53,6 +64,7 @@ public class UserService {
                 () -> new IllegalArgumentException("Deletion of user with id " + id + " resulted in error. Please try again.")
         );
         userRepo.delete(user);
+        log.info("The user with id {} was successfully deleted!", user.getId());
         return user.getId();
     }
 
@@ -66,6 +78,7 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
         userRepo.save(user);
+        log.info("The user with id {} was successfully edited!", user.getId());
         return buildResponse(userRepo.getUserById(id).orElseThrow(
                 () -> new IllegalArgumentException("User with id " + id + " could not be saved. Please try again.")
         ));

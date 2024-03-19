@@ -1,4 +1,4 @@
-package soa.userservice.controllers;
+package soa.hotelservice.controllers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -6,44 +6,41 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import soa.userservice.dto.UserRequest;
-import soa.userservice.dto.UserResponse;
-import soa.userservice.models.User;
-import soa.userservice.repositories.UserRepo;
-import soa.userservice.services.UserService;
+import soa.hotelservice.dto.user.*;
+import soa.hotelservice.service.HotelUserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user-api")
 @AllArgsConstructor
-public class UserController {
+public class HotelUserController {
 
-    private final UserService userService;
+    private final HotelUserService hotelUserService;
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UserResponse> getUserById(@PathVariable int id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    public ResponseEntity<UserResponse> getUserById(
+            @PathVariable("id") int id
+    ) {
+        return ResponseEntity.ok(hotelUserService.getUserById(id));
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<UserResponse>> getAll() {
-        return ResponseEntity.ok(userService.getAll());
+        return ResponseEntity.ok(hotelUserService.getAll());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponse> saveUser(
             @RequestBody UserRequest request) {
-        return ResponseEntity.ok(userService.saveUser(request));
+        return ResponseEntity.ok(hotelUserService.saveUser(request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deleteUser(@PathVariable("id") int id) {
-       return ResponseEntity.ok(userService.deleteUser(id));
+        return ResponseEntity.ok(hotelUserService.deleteUser(id));
     }
 
     @PutMapping("/{id}")
@@ -51,7 +48,6 @@ public class UserController {
             @Valid @PathVariable("id") int id,
             @RequestBody UserRequest request
     ) {
-        return ResponseEntity.ok(userService.editUser(id, request));
+        return ResponseEntity.ok(hotelUserService.editUser(id, request));
     }
-
 }
