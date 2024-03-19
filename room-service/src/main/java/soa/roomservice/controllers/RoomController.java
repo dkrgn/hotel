@@ -30,7 +30,7 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Room> saveUser(
+    public ResponseEntity<Room> saveRoom(
             @RequestParam("id") int id,
             @RequestParam("roomNumber") String roomNumber,
             @RequestParam("description") String description,
@@ -47,7 +47,7 @@ public class RoomController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Integer> deleteUser(@RequestParam("id") int id) {
+    public ResponseEntity<Integer> deleteRoom(@RequestParam("id") int id) {
         return ResponseEntity.ok(roomService.deleteRoom(id));
     }
 }
