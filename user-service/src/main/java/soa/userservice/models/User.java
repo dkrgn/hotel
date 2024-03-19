@@ -20,18 +20,23 @@ public class User {
     private int id;
 
     @NonNull
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(255)", name = "first_name")
     private String firstName;
 
     @NonNull
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(255)", name = "last_name")
     private String lastName;
 
     @NonNull
-    @Column(columnDefinition = "VARCHAR(100)")
+    @Column(columnDefinition = "VARCHAR(50)", name = "mobile_number")
+    private String mobileNumber;
+
+    @NonNull
+    @Column(columnDefinition = "VARCHAR(100)", name = "email")
     private String email;
 
     @NonNull
-    @Column(columnDefinition = "VARCHAR(50)")
-    private String mobileNumber;
+    @Column(columnDefinition = "VARCHAR(255)", name = "password")
+    private String password;
+
 }
