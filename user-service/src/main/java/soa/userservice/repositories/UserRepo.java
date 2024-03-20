@@ -19,4 +19,8 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     @Query(value = "SELECT * FROM users", nativeQuery = true)
     @Transactional(readOnly = true)
     Optional<List<User>> getAll();
+
+    @Query(value = "SELECT * FROM users", nativeQuery = true)
+    @Transactional(readOnly = true)
+    Optional<User> getUserByEmail(String email);
 }

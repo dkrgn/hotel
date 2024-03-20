@@ -1,13 +1,13 @@
-package soa.hotelservice.dto.user;
+package soa.hotelservice.auth.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
-
-    private int id;
+public class RegistrationRequest {
     private String firstName;
     private String lastName;
     private String mobileNumber;

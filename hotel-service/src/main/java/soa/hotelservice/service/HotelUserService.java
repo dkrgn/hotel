@@ -33,6 +33,22 @@ public class HotelUserService {
         }
     }
 
+    public UserResponse getUserByEmail(String email) {
+        UserResponse response = webClient
+                .get()
+                .uri("http://localhost:8081/user?email=" + email)
+                .header("Accept", "application/json")
+                .retrieve()
+                .bodyToMono(UserResponse.class)
+                .block();
+        if (response == null) {
+            throw new IllegalArgumentException("User Service could not find user with email " + email + "!");
+        } else {
+            log.info("The user with id {} was successfully found in User Service!", email);
+            return response;
+        }
+    }
+
     public List<UserResponse> getAll() {
         UserResponse[] response = webClient
                 .get()

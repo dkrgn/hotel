@@ -28,6 +28,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<UserResponse> getUserById(@RequestParam("email") String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
+
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<UserResponse>> getAll() {
