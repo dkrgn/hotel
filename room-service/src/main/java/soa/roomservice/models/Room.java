@@ -1,13 +1,11 @@
 package soa.roomservice.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.lang.NonNull;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -33,11 +31,12 @@ public class Room {
     private Integer capacity;
 
     @NonNull
-    @Column(name = "is_occupied", nullable = false)
-    private boolean isOccupied;
+    @Column(name = "price", nullable = false)
+    private int cost;
 
     @NonNull
-    @Column(name = "cost", nullable = false)
-    private int cost;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private RoomType type;
 
 }

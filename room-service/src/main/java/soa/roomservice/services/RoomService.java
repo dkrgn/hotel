@@ -2,42 +2,77 @@ package soa.roomservice.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
+import soa.roomservice.dto.RoomRequest;
+import soa.roomservice.dto.RoomResponse;
 import soa.roomservice.models.Room;
+import soa.roomservice.models.RoomType;
 import soa.roomservice.repositories.RoomRepo;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @AllArgsConstructor
+@Transactional
 public class RoomService {
     private final RoomRepo roomRepo;
 
-    public Room getRoomById(int id){return roomRepo.getRoomById(id).orElse(new Room());}
-
-    public List<Room> getAll() {
-        return roomRepo.getAll().orElse(new ArrayList<>());
+    public RoomResponse getRoomById(int id){
+        Room r = roomRepo.getRoomById(id).orElseThrow(
+                () -> new IllegalArgumentException("Get room with id " + id + " request resulted in error. Please try again."));
+        return new RoomResponse(r.getId(), r.getRoomNumber(), r.getDescription(), r.getCapacity(), r.getCost(), r.getType());
     }
 
-    public List<Room> getRoomWithCapacity(int capacity){
-        return roomRepo.getRoomWithCapacity(capacity).orElse(new ArrayList<>());
+    public List<RoomResponse> getAll() {
+        List<Room> r = roomRepo.getAll().orElseThrow(
+                () -> new IllegalArgumentException("Get all rooms request resulted in error. Please try again."));
+        return r.stream().map(this::buildResponse).collect(Collectors.toList());
     }
 
-    public List<Room> findRoomByOccupancy(boolean isOccupied){
-        return roomRepo.findRoomsByOccupancyStatus(isOccupied).orElse(new ArrayList<>());
+    public List<RoomResponse> getRoomWithCapacity(int capacity){
+        List<Room> r = roomRepo.getRoomWithCapacity(capacity).orElseThrow(
+                () -> new IllegalArgumentException("Get room with capacity " + capacity + " request resulted in error. Please try again."));
+        return r.stream().map(this::buildResponse).collect(Collectors.toList());
     }
 
-    public Room saveRoom(int id, String roomNumber, String description, int capacity, boolean isOccupied, int cost){
-        Room room = new Room(id, roomNumber, description, capacity, isOccupied, cost);
-        return roomRepo.save(room);
+    public RoomResponse saveRoom(RoomRequest r){
+        Room room = Room.builder()
+                .roomNumber(r.getRoomNumber())
+                .description(r.getDescription())
+                .capacity(r.getCapacity())
+                .cost(r.getCost())
+                .type(r.getType())
+                .build();
+        roomRepo.save(room);
+        Room fromDB = roomRepo.getRoomById(room.getId()).orElseThrow(
+                () -> new IllegalArgumentException("Room was not saved! Please try again."));
+        log.info("The room with id {} was successfully saved!", room.getId());
+        return buildResponse(fromDB);
     }
 
     public int deleteRoom(int id){
-        Room room = roomRepo.getRoomById(id).orElse(null);
-        if (room == null){
-            return -1;
-        }
+        Room room = roomRepo.getRoomById(id).orElseThrow(
+                () -> new IllegalArgumentException("Deletion of room with id " + id + " resulted in error. Please try again."));
         roomRepo.delete(room);
+        log.info("The room with id {} was successfully deleted!", room.getId());
         return room.getId();
+    }
+
+    public List<RoomResponse> getRoomByType(RoomType type){
+        List<Room> r = roomRepo.getRoomsByType(type.name()).orElseThrow(
+                () -> new IllegalArgumentException("Get room with type " + type.name() + " request resulted in error. Please try again.\""));
+        return r.stream().map(this::buildResponse).collect(Collectors.toList());
+    }
+
+    private RoomResponse buildResponse(Room r){
+        return new RoomResponse(r.getId(),
+                r.getRoomNumber(),
+                r.getDescription(),
+                r.getCapacity(),
+                r.getCost(),
+                r.getType());
     }
 }

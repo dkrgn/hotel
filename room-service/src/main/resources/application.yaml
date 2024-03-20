@@ -1,0 +1,11 @@
+server:
+  port: 8082
+spring:
+  datasource:
+    username: postgres
+    password:
+    url: jdbc:postgresql://localhost:5432/rooms
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
