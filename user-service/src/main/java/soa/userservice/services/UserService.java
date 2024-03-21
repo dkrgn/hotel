@@ -40,6 +40,10 @@ public class UserService {
     }
 
     public UserResponse saveUser(UserRequest request) {
+        User checkEmail = userRepo.getUserByEmail(request.getEmail()).orElse(null);
+        if (checkEmail != null) {
+            throw new IllegalArgumentException("The user is already registered with email " + request.getEmail());
+        }
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())

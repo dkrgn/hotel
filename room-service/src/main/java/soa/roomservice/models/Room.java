@@ -32,7 +32,7 @@ public class Room {
 
     @NonNull
     @Column(name = "price", nullable = false)
-    private int cost;
+    private Double cost;
 
     @NonNull
     @Enumerated(EnumType.STRING)

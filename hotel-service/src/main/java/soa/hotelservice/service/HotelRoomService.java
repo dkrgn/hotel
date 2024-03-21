@@ -18,11 +18,12 @@ import java.util.List;
 @Slf4j
 public class HotelRoomService {
 
-    private final WebClient webClient;
-    private final String URI = "http://localhost:8082/room";
+    private final WebClient.Builder webClient;
+    private final String URI = "http://room-service/room";
 
     public RoomResponse getRoomById(int id){
-        RoomResponse response = webClient.get()
+        RoomResponse response = webClient.build()
+                .get()
                 .uri(URI +"/"+ id)
                 .retrieve()
                 .bodyToMono(RoomResponse.class)
@@ -37,7 +38,8 @@ public class HotelRoomService {
     }
 
     public List<RoomResponse> getAll(){
-        RoomResponse[] response = webClient.get()
+        RoomResponse[] response = webClient.build()
+                .get()
                 .uri(URI + "/all")
                 .retrieve()
                 .bodyToMono(RoomResponse[].class)
@@ -52,7 +54,8 @@ public class HotelRoomService {
     }
 
     public List<RoomResponse> getRoomWithCapacity(int capacity){
-        RoomResponse[] response = webClient.get()
+        RoomResponse[] response = webClient.build()
+                .get()
                 .uri(URI + "?capacity=" + capacity)
                 .retrieve()
                 .bodyToMono(RoomResponse[].class)
@@ -67,7 +70,7 @@ public class HotelRoomService {
     }
 
     public RoomResponse saveRoom(RoomRequest roomRequest){
-        RoomResponse response = webClient
+        RoomResponse response = webClient.build()
                 .post()
                 .uri(URI)
                 .body(BodyInserters.fromValue(roomRequest))
@@ -84,7 +87,7 @@ public class HotelRoomService {
     }
 
     public Integer deleteRoom(int id){
-        Integer response = webClient
+        Integer response = webClient.build()
                 .delete()
                 .uri(URI + "/" + id)
                 .retrieve()
@@ -100,7 +103,8 @@ public class HotelRoomService {
     }
 
     public List<RoomResponse> getRoomByType(RoomType type){
-        RoomResponse[] response = webClient.get()
+        RoomResponse[] response = webClient.build()
+                .get()
                 .uri(URI + "?type=" + type.name())
                 .retrieve()
                 .bodyToMono(RoomResponse[].class)

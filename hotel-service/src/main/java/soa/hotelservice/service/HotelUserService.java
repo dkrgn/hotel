@@ -16,12 +16,13 @@ import java.util.List;
 @Slf4j
 public class HotelUserService {
 
-    private final WebClient webClient;
+    private final WebClient.Builder webClient;
+    private static final String URI = "http://user-service/user";
 
     public UserResponse getUserById(int id) {
-        UserResponse response = webClient
+        UserResponse response = webClient.build()
                 .get()
-                .uri("http://localhost:8081/user/" + id)
+                .uri(URI + "/" + id)
                 .retrieve()
                 .bodyToMono(UserResponse.class)
                 .block();
@@ -34,9 +35,9 @@ public class HotelUserService {
     }
 
     public UserResponse getUserByEmail(String email) {
-        UserResponse response = webClient
+        UserResponse response = webClient.build()
                 .get()
-                .uri("http://localhost:8081/user?email=" + email)
+                .uri(URI + "/email=" + email)
                 .header("Accept", "application/json")
                 .retrieve()
                 .bodyToMono(UserResponse.class)
@@ -50,9 +51,9 @@ public class HotelUserService {
     }
 
     public List<UserResponse> getAll() {
-        UserResponse[] response = webClient
+        UserResponse[] response = webClient.build()
                 .get()
-                .uri("http://localhost:8081/user/all")
+                .uri(URI + "/all")
                 .retrieve()
                 .bodyToMono(UserResponse[].class)
                 .block();
@@ -65,9 +66,9 @@ public class HotelUserService {
     }
 
     public UserResponse saveUser(UserRequest request) {
-        UserResponse response = webClient
+        UserResponse response = webClient.build()
                 .post()
-                .uri("http://localhost:8081/user")
+                .uri(URI)
                 .body(BodyInserters.fromValue(request))
                 .retrieve()
                 .bodyToMono(UserResponse.class)
@@ -81,9 +82,9 @@ public class HotelUserService {
     }
 
     public Integer deleteUser(int id) {
-        Integer response = webClient
+        Integer response = webClient.build()
                 .delete()
-                .uri("http://localhost:8081/user/" + id)
+                .uri(URI + "/" + id)
                 .retrieve()
                 .bodyToMono(Integer.class)
                 .block();
@@ -96,9 +97,9 @@ public class HotelUserService {
     }
 
     public UserResponse editUser(int id, UserRequest request) {
-        UserResponse response = webClient
+        UserResponse response = webClient.build()
                 .put()
-                .uri("http://localhost:8081/user/" + id)
+                .uri(URI + "/" + id)
                 .body(BodyInserters.fromValue(request))
                 .retrieve()
                 .bodyToMono(UserResponse.class)

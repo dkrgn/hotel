@@ -1,8 +1,8 @@
 spring:
   application:
-    name: hotel-service
+    name: notification-service
 server:
-  port: 0
+  port: 8085
 eureka:
   client:
     service-url:
