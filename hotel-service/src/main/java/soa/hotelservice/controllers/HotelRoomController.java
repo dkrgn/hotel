@@ -20,6 +20,7 @@ public class HotelRoomController {
     private final HotelRoomService hotelRoomService;
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RoomResponse> getRoomById(@PathVariable int id) {
         return ResponseEntity.ok(hotelRoomService.getRoomById(id));
     }
@@ -48,6 +49,7 @@ public class HotelRoomController {
     }
 
     @GetMapping(params = "type")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<RoomResponse>> getRoomsByType(@RequestParam("type") RoomType type){
         return ResponseEntity.ok(hotelRoomService.getRoomByType(type));
     }

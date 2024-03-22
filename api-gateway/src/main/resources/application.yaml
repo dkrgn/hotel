@@ -4,22 +4,42 @@ spring:
   cloud:
     gateway:
       routes[0]:
-        id: hotel-user-service
-        uri: lb://hotel-service
-        predicates[0]: Path=/user-api/**
-      routes[1]:
-        id: hotel-room-service
-        uri: lb://hotel-service
-        predicates[0]: Path=/room-api/**
-      routes[2]:
         id: discovery-service
         uri: http://localhost:8761
         predicates[0]: Path=/eureka/web
         filters[0]: SetPath=/
-      routes[3]:
+      routes[1]:
         id: discovery-service-resources
         uri: http://localhost:8761
         predicates[0]: Path=/eureka/**
+      routes[2]:
+        id: hotel-user-service
+        uri: lb://hotel-service
+        predicates[0]: Path=/user-api/**
+      routes[3]:
+        id: hotel-room-service
+        uri: lb://hotel-service
+        predicates[0]: Path=/room-api/**
+      routes[4]:
+        id: hotel-login-service
+        uri: lb://hotel-service
+        predicates[0]: Path=/login.html
+      routes[5]:
+        id: hotel-login-service-resources
+        uri: lb://hotel-service
+        predicates[0]: Path=/login.html/**
+      routes[6]:
+        id: hotel-register-service
+        uri: lb://hotel-service
+        predicates[0]: Path=/register.html
+      routes[7]:
+        id: hotel-register-service-resources
+        uri: lb://hotel-service
+        predicates[0]: Path=/register.html/**
+      routes[8]:
+        id: hotel-payment-service
+        uri: lb://hotel-service
+        predicates[0]: Path=/payment-api/**
 eureka:
   client:
     service-url:
