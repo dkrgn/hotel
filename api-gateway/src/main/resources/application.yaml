@@ -40,6 +40,10 @@ spring:
         id: hotel-payment-service
         uri: lb://hotel-service
         predicates[0]: Path=/payment-api/**
+      routes[9]:
+        id: hotel-static-resources
+        uri: lb://hotel-service
+        predicates[0]: Path=/css/**, /js/**, /images/**
 eureka:
   client:
     service-url:
