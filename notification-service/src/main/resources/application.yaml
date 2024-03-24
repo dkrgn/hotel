@@ -1,8 +1,16 @@
+server:
+  port: 0
 spring:
   application:
     name: notification-service
-server:
-  port: 8085
+  datasource:
+    username: postgres
+    password:
+    url: jdbc:postgresql://localhost:5432/notifications
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
 eureka:
   client:
     service-url:

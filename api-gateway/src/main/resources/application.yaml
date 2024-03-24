@@ -44,6 +44,10 @@ spring:
         id: hotel-static-resources
         uri: lb://hotel-service
         predicates[0]: Path=/css/**, /js/**, /images/**
+      routes[10]:
+        id: hotel-notification-service
+        uri: lb://hotel-service
+        predicates[0]: Path=/notification-api/**
 eureka:
   client:
     service-url:
