@@ -6,11 +6,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import soa.hotelservice.dto.notification.NotificationRequest;
 import soa.hotelservice.dto.notification.NotificationResponse;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @Slf4j
@@ -56,23 +60,19 @@ public class HotelNotificationService {
 
     //Async
     //TODO: Get users email and put it into the request
-    public Mono<NotificationResponse> save(NotificationRequest request) {
-       return webClient.build()
-                .post()
-                .uri(URI)
-                .body(BodyInserters.fromValue(request))
-                .retrieve()
-                .bodyToMono(NotificationResponse.class)
-                .doOnSuccess(response -> {
-                    if (response == null) {
-                        throw new IllegalArgumentException("Notification Service could not handle notification!");
-                    } else {
-                        log.info("The notification with id {} was saved in Notification Service!", response.getId());
-                    }
-                })
-               .doOnError(error -> {
-                   log.error("Error saving notification: {}", error.getMessage());
-                   throw new RuntimeException("Error saving notification", error);
-               });
+    public NotificationResponse save(NotificationRequest request) {
+        try {
+            return webClient.build()
+                     .post()
+                     .uri(URI)
+                     .body(BodyInserters.fromValue(request))
+                     .retrieve()
+                     .bodyToMono(NotificationResponse.class)
+                     .subscribeOn(Schedulers.single())
+                     .toFuture()
+                     .get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -46,11 +46,6 @@ public class NotificationService {
                 .email(request.getEmail())
                 .build();
         //TODO: Make a real implementation of email notification?
-        try {
-            Thread.sleep(10000l);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         log.info("Sending a message: " + notification.getMessage());
         notificationRepo.save(notification);
         Notification fromDB = notificationRepo.getNotificationById(notification.getId()).orElseThrow(

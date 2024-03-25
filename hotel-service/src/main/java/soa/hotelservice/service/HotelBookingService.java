@@ -39,8 +39,8 @@ public class HotelBookingService {
             } else {
                 notificationService.save(new NotificationRequest(
                         paymentResponse.getUserId(),
-                        request.getEmail(),
-                        "Booking was successfully saved with id " + bookingResponse.getId()));
+                        "Booking was successfully saved with id " + bookingResponse.getId(),
+                        request.getEmail()));
                 return new BookingEventResponse(paymentResponse, bookingResponse, request.getEmail());
             }
         }

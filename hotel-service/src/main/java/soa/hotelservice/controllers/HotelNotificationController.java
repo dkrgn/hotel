@@ -12,6 +12,7 @@ import soa.hotelservice.dto.notification.NotificationResponse;
 import soa.hotelservice.service.HotelNotificationService;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/notification-api")
@@ -35,11 +36,8 @@ public class HotelNotificationController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ResponseEntity<NotificationResponse>> saveNotification(@RequestBody NotificationRequest request) {
-        Mono<ResponseEntity<NotificationResponse>> tmp =  hotelNotificationService.save(request)
-                .map(response -> ResponseEntity.ok(response))
-                .defaultIfEmpty(ResponseEntity.badRequest().build());
+    public ResponseEntity<NotificationResponse> saveNotification(@RequestBody NotificationRequest request) {
         log.info("Done");
-        return  tmp;
+        return ResponseEntity.ok(hotelNotificationService.save(request));
     }
 }
