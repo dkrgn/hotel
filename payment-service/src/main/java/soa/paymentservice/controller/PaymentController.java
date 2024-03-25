@@ -32,4 +32,9 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> savePayment(@RequestBody PaymentRequest request) {
         return ResponseEntity.ok(paymentService.save(request));
     }
+
+    @DeleteMapping("/id")
+    public ResponseEntity<Integer> deletePaymentByUserId(@PathVariable("id") int id) {
+        return ResponseEntity.ok(paymentService.deletePaymentByUserId(id));
+    }
 }

@@ -7,7 +7,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import soa.hotelservice.dto.payment.PaymentRequest;
 import soa.hotelservice.dto.payment.PaymentResponse;
-import soa.hotelservice.dto.room.RoomResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +64,22 @@ public class HotelPaymentService {
         }
         else{
             log.info("The payment with id {} was saved in Payment Service!", response.getId());
+            return response;
+        }
+    }
+
+    public Integer deletePaymentsWithUserId(int id) {
+        Integer response = webClient.build()
+                .delete()
+                .uri(URI + "/" + id)
+                .retrieve()
+                .bodyToMono(Integer.class)
+                .block();
+        if (response == null){
+            throw new IllegalArgumentException("Payment Service could not a payment or there are no payments present in the database!");
+        }
+        else{
+            log.info("The payment with id {} was deleted in Payment Service!", response);
             return response;
         }
     }

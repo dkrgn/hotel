@@ -14,4 +14,8 @@ public interface PaymentRepo extends JpaRepository<Payment, Integer> {
 
     @Query(value = "SELECT * FROM payments", nativeQuery = true)
     Optional<List<Payment>> getAll();
+
+    @Query(value = "DELETE FROM payments WHERE user_id = :id", nativeQuery = true)
+    Optional<Integer> deletePaymentsByUserId(int id);
+
 }

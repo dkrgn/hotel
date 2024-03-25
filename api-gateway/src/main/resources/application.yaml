@@ -25,29 +25,33 @@ spring:
         uri: lb://hotel-service
         predicates[0]: Path=/login.html
       routes[5]:
-        id: hotel-login-service-resources
-        uri: lb://hotel-service
-        predicates[0]: Path=/login.html/**
-      routes[6]:
         id: hotel-register-service
         uri: lb://hotel-service
         predicates[0]: Path=/register.html
-      routes[7]:
-        id: hotel-register-service-resources
-        uri: lb://hotel-service
-        predicates[0]: Path=/register.html/**
-      routes[8]:
+      routes[6]:
         id: hotel-payment-service
         uri: lb://hotel-service
         predicates[0]: Path=/payment-api/**
-      routes[9]:
+      routes[7]:
         id: hotel-static-resources
         uri: lb://hotel-service
         predicates[0]: Path=/css/**, /js/**, /images/**
-      routes[10]:
+      routes[8]:
         id: hotel-notification-service
         uri: lb://hotel-service
         predicates[0]: Path=/notification-api/**
+      routes[9]:
+        id: hotel-booking-service
+        uri: lb://hotel-service
+        predicates[0]: Path=/booking-api
+      routes[10]:
+        id: hotel-login-service-resources
+        uri: lb://hotel-service
+        predicates[0]: Path=/login.html/**
+      routes[11]:
+        id: hotel-register-service-resources
+        uri: lb://hotel-service
+        predicates[0]: Path=/register.html/**
 eureka:
   client:
     service-url:

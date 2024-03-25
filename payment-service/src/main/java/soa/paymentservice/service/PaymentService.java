@@ -49,10 +49,18 @@ public class PaymentService {
                 .type(request.getType())
                 .issuedAt(request.getIssuedAt())
                 .build();
+        System.out.println(payment.toString());
         paymentRepo.save(payment);
         Payment fromDB = paymentRepo.getPaymentById(payment.getId()).orElseThrow(
                 () -> new IllegalArgumentException("Payment was not saved! Please try again."));
         log.info("The room with id {} was successfully saved!", payment.getId());
         return buildResponse(fromDB);
+    }
+
+    public Integer deletePaymentByUserId(int id) {
+        Integer response = paymentRepo.deletePaymentsByUserId(id).orElseThrow(
+                () -> new IllegalArgumentException("Either no payments with user_id" + id + " or error occurred!")
+        );
+        return response;
     }
 }
