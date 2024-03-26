@@ -1,5 +1,7 @@
 package soa.hotelservice.service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,27 +24,29 @@ public class HotelBookingService {
     private final HotelPaymentService paymentService;
     private final HotelNotificationService notificationService;
 
+    @CircuitBreaker(name = "make-booking", fallbackMethod = "fallBackDeletePayment")
     public BookingEventResponse makeBooking(BookingEventRequest request) {
         PaymentResponse paymentResponse = paymentService.save(request.getPaymentRequest());
-        if (paymentResponse == null) {
-            throw new IllegalArgumentException("Payment could not be processed. Try again later.");
-        } else {
+        if (paymentResponse.getId() != 0) {
             request.getBookingRequest().setPaymentId(paymentResponse.getId());
             BookingResponse bookingResponse = saveBooking(request.getBookingRequest());
-            if (bookingResponse == null) {
-                Integer deleteResponse = paymentService.deletePaymentsWithUserId(request.getBookingRequest().getUserId());
-                if (deleteResponse == null) {
-                    log.info("Payment associated with user id {} was removed from the database", request.getPaymentRequest().getUserId());
-                } else {
-                    log.error("Payment either not present in Payment service DB or error occurred!");
-                }
-            } else {
-                notificationService.save(new NotificationRequest(
-                        paymentResponse.getUserId(),
-                        "Booking was successfully saved with id " + bookingResponse.getId(),
-                        request.getEmail()));
-                return new BookingEventResponse(paymentResponse, bookingResponse, request.getEmail());
-            }
+            notificationService.save(new NotificationRequest(
+                    paymentResponse.getUserId(),
+                    "Booking was successfully saved with id " + bookingResponse.getId(),
+                    request.getEmail()));
+            return new BookingEventResponse(paymentResponse, bookingResponse, request.getEmail());
+        } else {
+            log.error("Payment could not be processed, error occurred!");
+            return new BookingEventResponse();
+        }
+    }
+
+    public BookingEventResponse fallBackDeletePayment(BookingEventRequest request, RuntimeException e) {
+        Integer deleteResponse = paymentService.deletePaymentsWithUserId(request.getBookingRequest().getUserId());
+        if (deleteResponse == null) {
+            log.info("Payment associated with user id {} was removed from the database", request.getPaymentRequest().getUserId());
+        } else {
+            log.error("Payment either not present in Payment service DB or error occurred!");
         }
         return new BookingEventResponse();
     }

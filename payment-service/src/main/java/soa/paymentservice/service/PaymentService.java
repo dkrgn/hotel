@@ -53,7 +53,7 @@ public class PaymentService {
         paymentRepo.save(payment);
         Payment fromDB = paymentRepo.getPaymentById(payment.getId()).orElseThrow(
                 () -> new IllegalArgumentException("Payment was not saved! Please try again."));
-        log.info("The room with id {} was successfully saved!", payment.getId());
+        log.info("The payment with id {} was successfully saved!", payment.getId());
         return buildResponse(fromDB);
     }
 

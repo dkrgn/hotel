@@ -1,5 +1,7 @@
 package soa.hotelservice.service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ public class HotelPaymentService {
                 .bodyToMono(PaymentResponse.class)
                 .block();
         if (response == null){
-            throw new IllegalArgumentException("Payment Service could not load room with id " + id + "!");
+            throw new IllegalArgumentException("Payment Service could not load payment with id " + id + "!");
         }
         else{
             log.info("The payment with id {} was successfully retrieved from Payment Service!", id);
@@ -51,21 +53,19 @@ public class HotelPaymentService {
         }
     }
 
+    @CircuitBreaker(name = "save-payment", fallbackMethod = "savePaymentFallBack")
     public PaymentResponse save(PaymentRequest request) {
-        PaymentResponse response = webClient.build()
+        return webClient.build()
                 .post()
                 .uri(URI)
                 .body(BodyInserters.fromValue(request))
                 .retrieve()
                 .bodyToMono(PaymentResponse.class)
                 .block();
-        if (response == null){
-            throw new IllegalArgumentException("Payment Service could not save a payment!");
-        }
-        else{
-            log.info("The payment with id {} was saved in Payment Service!", response.getId());
-            return response;
-        }
+    }
+
+    public PaymentResponse savePaymentFallBack(PaymentRequest request, RuntimeException e) {
+        return new PaymentResponse();
     }
 
     public Integer deletePaymentsWithUserId(int id) {

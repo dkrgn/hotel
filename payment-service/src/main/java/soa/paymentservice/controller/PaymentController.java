@@ -33,7 +33,7 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.save(request));
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deletePaymentByUserId(@PathVariable("id") int id) {
         return ResponseEntity.ok(paymentService.deletePaymentByUserId(id));
     }
