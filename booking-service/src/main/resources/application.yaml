@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: booking-service
+  datasource:
+    username: postgres
+    password:
+    url: jdbc:postgresql://localhost:5432/bookings
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+server:
+  port: 0
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
