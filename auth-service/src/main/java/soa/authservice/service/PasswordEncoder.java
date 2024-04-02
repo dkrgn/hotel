@@ -1,4 +1,4 @@
-package soa.hotelservice.auth.service;
+package soa.authservice.service;
 
 import org.springframework.context.annotation.Configuration;
 

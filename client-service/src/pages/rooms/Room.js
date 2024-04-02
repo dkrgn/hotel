@@ -1,5 +1,6 @@
 import React from "react";
 import "./Room.css";
+import { Link } from "react-router-dom";
 
 export default function Room({room}) {
     return (
@@ -9,7 +10,7 @@ export default function Room({room}) {
         <h3>{room.type}</h3>
         <p>{room.description}</p>
         <p>Price: ${room.price} per night</p>
-        <button>Book Now</button>
+        <Link to="/booking">Book Now</Link>
       </div>
     </div>
   );

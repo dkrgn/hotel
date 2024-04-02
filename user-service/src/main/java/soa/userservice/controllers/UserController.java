@@ -1,6 +1,7 @@
 package soa.userservice.controllers;
 
 import jakarta.validation.Valid;
+import jakarta.ws.rs.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UserResponse> getUserById(@RequestParam("email") String email) {
+    public ResponseEntity<UserResponse> getUserByEmail(@PathParam("email") String email) {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 

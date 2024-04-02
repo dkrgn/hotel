@@ -21,41 +21,31 @@ spring:
         uri: lb://hotel-service
         predicates[0]: Path=/room-api/**
       routes[4]:
-        id: hotel-login-service
-        uri: lb://hotel-service
-        predicates[0]: Path=/login.html
+        id: auth-login-service
+        uri: lb://auth-service
+        predicates[0]: Path=/login
       routes[5]:
-        id: hotel-register-service
-        uri: lb://hotel-service
-        predicates[0]: Path=/register.html
+        id: auth-register-service
+        uri: lb://auth-service
+        predicates[0]: Path=/register
       routes[6]:
         id: hotel-payment-service
         uri: lb://hotel-service
         predicates[0]: Path=/payment-api/**
       routes[7]:
-        id: hotel-static-resources
-        uri: lb://hotel-service
-        predicates[0]: Path=/css/**, /js/**, /images/**
-      routes[8]:
         id: hotel-notification-service
         uri: lb://hotel-service
         predicates[0]: Path=/notification-api/**
-      routes[9]:
+      routes[8]:
         id: hotel-booking-service
         uri: lb://hotel-service
-        predicates[0]: Path=/booking-api
-      routes[10]:
-        id: hotel-login-service-resources
-        uri: lb://hotel-service
-        predicates[0]: Path=/login.html/**
-      routes[11]:
-        id: hotel-register-service-resources
-        uri: lb://hotel-service
-        predicates[0]: Path=/register.html/**
+        predicates[0]: Path=/booking-api/**
+
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
 logging:
   level:
     root: INFO

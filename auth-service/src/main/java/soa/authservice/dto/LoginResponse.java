@@ -1,4 +1,4 @@
-package soa.hotelservice.auth.dto;
+package soa.authservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegistrationResponse {
-    private boolean isSaved;
+public class LoginResponse {
+    private boolean canLogin;
 }

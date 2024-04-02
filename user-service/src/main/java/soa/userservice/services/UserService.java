@@ -27,9 +27,8 @@ public class UserService {
     }
 
     public UserResponse getUserByEmail(String email) {
-        User u = userRepo.getUserByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("Get user with email " + email + " request resulted in error. Please try again."));
-        return new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getMobileNumber(), u.getEmail(), u.getPassword());
+        User u = userRepo.getUserByEmail(email).orElse(null);
+        return userRepo.getUserByEmail(email).orElse(null) == null ? null : new UserResponse(u.getId(), u.getFirstName(), u.getLastName(), u.getMobileNumber(), u.getEmail(), u.getPassword());
     }
 
     public List<UserResponse> getAll() {

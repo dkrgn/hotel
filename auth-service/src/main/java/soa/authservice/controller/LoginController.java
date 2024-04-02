@@ -1,18 +1,16 @@
-package soa.hotelservice.auth.controller;
+package soa.authservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import soa.hotelservice.auth.dto.LoginRequest;
-import soa.hotelservice.auth.dto.LoginResponse;
-import soa.hotelservice.auth.service.LoginService;
-import soa.hotelservice.dto.user.UserResponse;
-import soa.hotelservice.service.HotelUserService;
+import soa.authservice.dto.LoginRequest;
+import soa.authservice.dto.LoginResponse;
+import soa.authservice.service.LoginService;
 
 @RestController
-@RequestMapping(path = "/login.html/")
+@RequestMapping(path = "/login")
 @AllArgsConstructor
 public class LoginController {
 

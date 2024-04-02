@@ -1,16 +1,16 @@
-package soa.hotelservice.auth.controller;
+package soa.authservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import soa.hotelservice.auth.dto.RegistrationRequest;
-import soa.hotelservice.auth.dto.RegistrationResponse;
-import soa.hotelservice.auth.service.RegistrationService;
+import soa.authservice.dto.RegistrationRequest;
+import soa.authservice.dto.RegistrationResponse;
+import soa.authservice.service.RegistrationService;
 
 @RestController
-@RequestMapping(path = "/register.html/")
+@RequestMapping(path = "/register")
 @AllArgsConstructor
 public class RegistrationController {
 

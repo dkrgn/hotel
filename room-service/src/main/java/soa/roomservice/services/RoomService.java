@@ -23,7 +23,7 @@ public class RoomService {
     public RoomResponse getRoomById(int id){
         Room r = roomRepo.getRoomById(id).orElseThrow(
                 () -> new IllegalArgumentException("Get room with id " + id + " request resulted in error. Please try again."));
-        return new RoomResponse(r.getId(), r.getRoomNumber(), r.getDescription(), r.getCapacity(), r.getCost(), r.getType());
+        return new RoomResponse(r.getId(), r.getRoomNumber(), r.getDescription(), r.getCapacity(), r.getPrice(), r.getType());
     }
 
     public List<RoomResponse> getAll() {
@@ -43,7 +43,7 @@ public class RoomService {
                 .roomNumber(r.getRoomNumber())
                 .description(r.getDescription())
                 .capacity(r.getCapacity())
-                .cost(r.getCost())
+                .price(r.getPrice())
                 .type(r.getType())
                 .build();
         roomRepo.save(room);
@@ -72,7 +72,7 @@ public class RoomService {
                 r.getRoomNumber(),
                 r.getDescription(),
                 r.getCapacity(),
-                r.getCost(),
+                r.getPrice(),
                 r.getType());
     }
 }
