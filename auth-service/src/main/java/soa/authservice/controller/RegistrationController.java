@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import soa.authservice.dto.RegistrationRequest;
-import soa.authservice.dto.RegistrationResponse;
+import soa.authservice.dto.register.RegistrationRequest;
+import soa.authservice.dto.register.RegistrationResponse;
 import soa.authservice.service.RegistrationService;
 
 @RestController

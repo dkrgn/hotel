@@ -53,6 +53,22 @@ public class HotelRoomService {
         }
     }
 
+    public List<RoomResponse> getAvailable() {
+        RoomResponse[] response = webClient.build()
+                .get()
+                .uri(URI + "/available")
+                .retrieve()
+                .bodyToMono(RoomResponse[].class)
+                .block();
+        if (response == null){
+            throw new IllegalArgumentException("Room Service could not load an available list of rooms!");
+        }
+        else{
+            log.info("The list of available rooms was successfully retrieved from Room Service!");
+            return Arrays.stream(response).toList();
+        }
+    }
+
     public List<RoomResponse> getRoomWithCapacity(int capacity){
         RoomResponse[] response = webClient.build()
                 .get()
@@ -118,4 +134,16 @@ public class HotelRoomService {
         }
     }
 
+    public void changeAvailability(int roomId, boolean isAvailable) {
+        Integer response = webClient.build()
+                .patch()
+                .uri(URI + "/"  + roomId)
+                .body(BodyInserters.fromValue(isAvailable))
+                .retrieve()
+                .bodyToMono(Integer.class)
+                .block();
+        if (response == null){
+            throw new IllegalArgumentException("Could not change room availability!");
+        }
+    }
 }

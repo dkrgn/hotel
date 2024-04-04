@@ -35,7 +35,6 @@ public class PaymentService {
                 .id(payment.getId())
                 .userId(payment.getUserId())
                 .roomId(payment.getRoomId())
-                .status(payment.getStatus())
                 .type(payment.getType())
                 .issuedAt(payment.getIssuedAt())
                 .build();
@@ -45,7 +44,6 @@ public class PaymentService {
         Payment payment = Payment.builder()
                 .userId(request.getUserId())
                 .roomId(request.getRoomId())
-                .status(request.getStatus())
                 .type(request.getType())
                 .issuedAt(request.getIssuedAt())
                 .build();

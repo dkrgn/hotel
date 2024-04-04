@@ -25,11 +25,6 @@ public class Payment {
             nullable = false)
     private int roomId;
 
-    @Column(name = "status",
-            nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus status;
-
     @Column(name = "type",
             nullable = false)
     @Enumerated(EnumType.STRING)

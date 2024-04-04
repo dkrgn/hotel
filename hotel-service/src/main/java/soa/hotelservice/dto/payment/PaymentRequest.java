@@ -15,7 +15,6 @@ public class PaymentRequest {
 
     private int userId;
     private int roomId;
-    private PaymentStatus status;
     private PaymentType type;
     private LocalDateTime issuedAt;
 }

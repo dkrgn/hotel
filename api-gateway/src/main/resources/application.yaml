@@ -40,6 +40,10 @@ spring:
         id: hotel-booking-service
         uri: lb://hotel-service
         predicates[0]: Path=/booking-api/**
+      routes[9]:
+        id: auth-token-service
+        uri: lb://auth-service
+        predicates[0]: Path=/token/**
 
 eureka:
   client:

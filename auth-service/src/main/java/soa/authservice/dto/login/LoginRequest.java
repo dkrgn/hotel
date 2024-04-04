@@ -1,4 +1,4 @@
-package soa.authservice.dto;
+package soa.authservice.dto.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResponse {
-    private boolean canLogin;
+public class LoginRequest {
+    private String email;
+    private String password;
 }

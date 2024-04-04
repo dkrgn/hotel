@@ -1,5 +1,6 @@
 package soa.roomservice.controllers;
 
+import jakarta.ws.rs.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +29,21 @@ public class RoomController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<RoomResponse>> getAll() {
         return ResponseEntity.ok(roomService.getAll());
+    }
+
+    @GetMapping("/available")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<RoomResponse>> getAvailable() {
+        return ResponseEntity.ok(roomService.getAvailable());
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Integer> changeRoomAvailability(
+            @RequestBody Boolean isAvailable,
+            @PathVariable("id") int id) {
+        System.err.println(isAvailable + "   " + id);
+        return ResponseEntity.ok(roomService.changeAvailability(id, isAvailable));
     }
 
     @GetMapping(params = "capacity")

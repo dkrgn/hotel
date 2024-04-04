@@ -1,4 +1,4 @@
-package soa.authservice.dto;
+package soa.authservice.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

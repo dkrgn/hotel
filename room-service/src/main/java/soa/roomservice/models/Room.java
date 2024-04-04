@@ -39,4 +39,8 @@ public class Room {
     @Column(name = "type")
     private RoomType type;
 
+    @NonNull
+    @Column(name = "is_available", nullable = false)
+    private boolean isAvailable;
+
 }

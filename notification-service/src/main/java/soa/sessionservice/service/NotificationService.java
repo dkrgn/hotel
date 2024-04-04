@@ -53,4 +53,10 @@ public class NotificationService {
         log.info("The notification with id {} was successfully saved!", notification.getId());
         return buildResponse(fromDB);
     }
+
+    public Integer deleteNotificationByUserId(int id) {
+        Notification notification = notificationRepo.getNotificationByUserId(id);
+        notificationRepo.delete(notification);
+        return notification.getId();
+    }
 }

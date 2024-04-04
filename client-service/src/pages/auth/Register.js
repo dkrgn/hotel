@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Register.css";
+import "./Auth.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -28,11 +28,21 @@ export default function Register() {
             const request = {firstName : form.firstName, lastName : form.lastName, mobileNumber : form.mobileNumber, email : form.email, password : form.password};
             axios.post('http://localhost:8080/register', request)
             .then(response => {
-                console.log(response);
-                navigate("/");
+                let data = response.data;
+                console.log(data);
+                if (data.saved) {
+                    let email = data.email;
+                    let token_id = data.tokenResponse.id;
+                    let user_id = data.tokenResponse.userId;
+                    localStorage.setItem("token_id", token_id);
+                    localStorage.setItem("user_id", user_id);
+                    localStorage.setItem("email", email);
+                    navigate("/");
+                }
             })
             .catch(err => {
                 console.log(err);
+                alert("Email either taken or registration error occurred!");
                 window.location.reload();
             })
         }

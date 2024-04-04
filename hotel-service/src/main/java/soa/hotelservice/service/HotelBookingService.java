@@ -11,8 +11,12 @@ import soa.hotelservice.dto.booking.BookingRequest;
 import soa.hotelservice.dto.booking.BookingResponse;
 import soa.hotelservice.dto.notification.NotificationRequest;
 import soa.hotelservice.dto.payment.PaymentResponse;
+import soa.hotelservice.dto.room.RoomResponse;
 import soa.hotelservice.event.BookingEventRequest;
 import soa.hotelservice.event.BookingEventResponse;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +27,7 @@ public class HotelBookingService {
     private final String URI = "http://booking-service/booking";
     private final HotelPaymentService paymentService;
     private final HotelNotificationService notificationService;
+    private final HotelRoomService roomService;
 
     @CircuitBreaker(name = "make-booking", fallbackMethod = "fallBackDeletePayment")
     public BookingEventResponse makeBooking(BookingEventRequest request) {
@@ -30,6 +35,7 @@ public class HotelBookingService {
         if (paymentResponse.getId() != 0) {
             request.getBookingRequest().setPaymentId(paymentResponse.getId());
             BookingResponse bookingResponse = saveBooking(request.getBookingRequest());
+            roomService.changeAvailability(bookingResponse.getRoomId(), false);
             notificationService.save(new NotificationRequest(
                     paymentResponse.getUserId(),
                     "Booking was successfully saved with id " + bookingResponse.getId(),
@@ -42,12 +48,7 @@ public class HotelBookingService {
     }
 
     public BookingEventResponse fallBackDeletePayment(BookingEventRequest request, RuntimeException e) {
-        Integer deleteResponse = paymentService.deletePaymentsWithUserId(request.getBookingRequest().getUserId());
-        if (deleteResponse == null) {
-            log.info("Payment associated with user id {} was removed from the database", request.getPaymentRequest().getUserId());
-        } else {
-            log.error("Payment either not present in Payment service DB or error occurred!");
-        }
+        paymentService.deletePaymentsWithUserId(request.getBookingRequest().getUserId());
         return new BookingEventResponse();
     }
 
@@ -66,5 +67,34 @@ public class HotelBookingService {
             log.info("The booking with id {} was saved in Booking Service!", response.getId());
             return response;
         }
+    }
+
+    public Integer deleteBookingsByUserId(int id) {
+        BookingResponse[] bookingResponse = webClient.build()
+                .get()
+                .uri(URI + "/" + id)
+                .retrieve()
+                .bodyToMono(BookingResponse[].class)
+                .block();
+        if (bookingResponse != null) {
+            for (BookingResponse resp : bookingResponse) {
+                roomService.changeAvailability(resp.getRoomId(), true);
+                paymentService.deletePaymentsWithUserId(id);
+                notificationService.deleteNotificationsByUserId(id);
+                deleteBookings(id);
+            }
+            return bookingResponse.length;
+        } else {
+            throw new IllegalArgumentException("Could not delete booking with id " + id);
+        }
+    }
+
+    public void deleteBookings(int userId) {
+        webClient.build()
+                .delete()
+                .uri(URI + "/" + userId)
+                .retrieve()
+                .bodyToMono(Integer.class)
+                .block();
     }
 }

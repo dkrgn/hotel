@@ -23,13 +23,25 @@ public class RoomService {
     public RoomResponse getRoomById(int id){
         Room r = roomRepo.getRoomById(id).orElseThrow(
                 () -> new IllegalArgumentException("Get room with id " + id + " request resulted in error. Please try again."));
-        return new RoomResponse(r.getId(), r.getRoomNumber(), r.getDescription(), r.getCapacity(), r.getPrice(), r.getType());
+        return new RoomResponse(r.getId(), r.getRoomNumber(), r.getDescription(), r.getCapacity(), r.getPrice(), r.getType(), r.isAvailable());
     }
 
     public List<RoomResponse> getAll() {
         List<Room> r = roomRepo.getAll().orElseThrow(
                 () -> new IllegalArgumentException("Get all rooms request resulted in error. Please try again."));
         return r.stream().map(this::buildResponse).collect(Collectors.toList());
+    }
+
+    public List<RoomResponse> getAvailable() {
+        List<Room> r = roomRepo.getAllAvailableRooms().orElseThrow(
+                () -> new IllegalArgumentException("Get all available rooms request resulted in error. Please try again."));
+        return r.stream().map(this::buildResponse).collect(Collectors.toList());
+    }
+
+    public Integer changeAvailability(int id, Boolean isAvailable) {
+        return roomRepo.changeAvailability(id, isAvailable).orElseThrow(
+                () -> new IllegalArgumentException("Could not change room " + id + "'s availability to " + isAvailable + "!")
+        );
     }
 
     public List<RoomResponse> getRoomWithCapacity(int capacity){
@@ -45,6 +57,7 @@ public class RoomService {
                 .capacity(r.getCapacity())
                 .price(r.getPrice())
                 .type(r.getType())
+                .isAvailable(r.isAvailable())
                 .build();
         roomRepo.save(room);
         Room fromDB = roomRepo.getRoomById(room.getId()).orElseThrow(
@@ -73,6 +86,7 @@ public class RoomService {
                 r.getDescription(),
                 r.getCapacity(),
                 r.getPrice(),
-                r.getType());
+                r.getType(),
+                r.isAvailable());
     }
 }

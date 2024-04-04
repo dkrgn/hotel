@@ -85,7 +85,7 @@ public class UserService {
         user.setLastName(request.getLastName());
         user.setMobileNumber(request.getMobileNumber());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+        user.setPassword(PasswordEncoder.getPasswordEncoded(request.getPassword()));
         userRepo.save(user);
         log.info("The user with id {} was successfully edited!", user.getId());
         return buildResponse(userRepo.getUserById(id).orElseThrow(

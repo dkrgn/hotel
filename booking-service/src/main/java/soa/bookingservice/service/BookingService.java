@@ -7,6 +7,9 @@ import soa.bookingservice.dto.BookingResponse;
 import soa.bookingservice.model.Booking;
 import soa.bookingservice.repo.BookingRepo;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class BookingService {
@@ -27,6 +30,25 @@ public class BookingService {
         Booking fromDB = bookingRepo.getBookingById(booking.getId()).orElseThrow(
                 () -> new IllegalArgumentException("User was not saved! Please try again.")
         );
+        return buildResponse(booking);
+    }
+
+    public Integer deleteBookingsByUserId(int id) {
+        List<Booking> bookings = bookingRepo.getBookingsByUserId(id).orElseThrow(
+                () -> new IllegalArgumentException("Could not get list of bookings with user id " + id)
+        );
+        bookingRepo.deleteAll(bookings);
+        return bookings.size();
+    }
+
+    public List<BookingResponse> getBookingsByUserId(int id) {
+        List<Booking> bookings = bookingRepo.getBookingsByUserId(id).orElseThrow(
+                () -> new IllegalArgumentException("Bookings with user id " + id + " could not be found in the database!")
+        );
+        return bookings.stream().map(this::buildResponse).collect(Collectors.toList());
+    }
+
+    private BookingResponse buildResponse(Booking booking) {
         return BookingResponse.builder()
                 .id(booking.getId())
                 .userId(booking.getUserId())
@@ -36,5 +58,4 @@ public class BookingService {
                 .end(booking.getEnd())
                 .build();
     }
-
 }

@@ -31,4 +31,9 @@ public class NotificationController {
     public ResponseEntity<NotificationResponse> savePayment(@RequestBody NotificationRequest request) {
         return ResponseEntity.ok(notificationService.save(request));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Integer> deleteNotificationByUserId(@PathVariable("id") int id) {
+        return ResponseEntity.ok(notificationService.deleteNotificationByUserId(id));
+    }
 }

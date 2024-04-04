@@ -1,5 +1,5 @@
 import React from "react";
-import "./Login.css";
+import "./Auth.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
@@ -10,21 +10,30 @@ export default function Login() {
         password: ""
     });
 
-const onChange = e => {
-    const {name, value} = e.target;
-    setForm((prev) => {
-        return {...prev, [name]: value};
-    })
-};
-const navigate = useNavigate();
+    const onChange = e => {
+        const {name, value} = e.target;
+        setForm((prev) => {
+            return {...prev, [name]: value};
+        })
+    };
+    const navigate = useNavigate();
 
-const handleSubmit = (e) => {
-    e.preventDefault();
-    const request = {email : form.email, password : form.password};
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const request = {email : form.email, password : form.password};
         axios.post('http://localhost:8080/login', request)
         .then(response => {
-            console.log(response);
-            navigate("/");
+            let data = response.data;
+            if (data.canLogin) {
+                console.log(data);
+                let email = data.email;
+                let token_id = data.tokenResponse.id;
+                let user_id = data.tokenResponse.userId;
+                localStorage.setItem("token_id", token_id);
+                localStorage.setItem("user_id", user_id);
+                localStorage.setItem("email", email);
+                navigate("/");
+            }
         })
         .catch(err => {
             console.log(err);

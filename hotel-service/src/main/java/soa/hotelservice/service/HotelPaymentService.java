@@ -68,7 +68,7 @@ public class HotelPaymentService {
         return new PaymentResponse();
     }
 
-    public Integer deletePaymentsWithUserId(int id) {
+    public void deletePaymentsWithUserId(int id) {
         Integer response = webClient.build()
                 .delete()
                 .uri(URI + "/" + id)
@@ -77,10 +77,6 @@ public class HotelPaymentService {
                 .block();
         if (response == null){
             throw new IllegalArgumentException("Payment Service could not a payment or there are no payments present in the database!");
-        }
-        else{
-            log.info("The payment with id {} was deleted in Payment Service!", response);
-            return response;
         }
     }
 }

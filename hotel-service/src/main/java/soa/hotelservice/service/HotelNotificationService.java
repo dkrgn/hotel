@@ -24,7 +24,6 @@ public class HotelNotificationService {
     private final WebClient.Builder webClient;
 
     private final String URI = "http://notification-service/notification";
-    private final String URIUser = "http://user-service/user";
 
     public NotificationResponse getNotificationById(int id) {
         NotificationResponse response = webClient.build()
@@ -58,8 +57,6 @@ public class HotelNotificationService {
         }
     }
 
-    //Async
-    //TODO: Get users email and put it into the request
     public NotificationResponse save(NotificationRequest request) {
         try {
             return webClient.build()
@@ -73,6 +70,18 @@ public class HotelNotificationService {
                      .get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteNotificationsByUserId(int id) {
+        Integer response = webClient.build()
+                .delete()
+                .uri(URI + "/" + id)
+                .retrieve()
+                .bodyToMono(Integer.class)
+                .block();
+        if (response == null) {
+            throw new IllegalArgumentException("Notifications could not be deleted!");
         }
     }
 }

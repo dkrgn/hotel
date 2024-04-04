@@ -15,4 +15,5 @@ public class RoomResponse {
     private Integer capacity;
     private Double price;
     private RoomType type;
+    private boolean isAvailable;
 }
