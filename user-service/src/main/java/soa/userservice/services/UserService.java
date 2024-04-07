@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import soa.userservice.dto.UserRequest;
 import soa.userservice.dto.UserResponse;
 import soa.userservice.models.User;
-import soa.userservice.repositories.UserRepo;
+import soa.userservice.repo.UserRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,16 +58,6 @@ public class UserService {
         return buildResponse(fromDB);
     }
 
-    private UserResponse buildResponse(User u) {
-        return new UserResponse(
-                u.getId(),
-                u.getFirstName(),
-                u.getLastName(),
-                u.getMobileNumber(),
-                u.getEmail(),
-                u.getPassword());
-    }
-
     public int deleteUser(int id) {
         User user = userRepo.getUserById(id).orElseThrow(
                 () -> new IllegalArgumentException("Deletion of user with id " + id + " resulted in error. Please try again.")
@@ -88,8 +78,16 @@ public class UserService {
         user.setPassword(PasswordEncoder.getPasswordEncoded(request.getPassword()));
         userRepo.save(user);
         log.info("The user with id {} was successfully edited!", user.getId());
-        return buildResponse(userRepo.getUserById(id).orElseThrow(
-                () -> new IllegalArgumentException("User with id " + id + " could not be saved. Please try again.")
-        ));
+        return buildResponse(user);
+    }
+
+    private UserResponse buildResponse(User u) {
+        return new UserResponse(
+                u.getId(),
+                u.getFirstName(),
+                u.getLastName(),
+                u.getMobileNumber(),
+                u.getEmail(),
+                u.getPassword());
     }
 }

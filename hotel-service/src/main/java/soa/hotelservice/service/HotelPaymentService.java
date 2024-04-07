@@ -21,38 +21,6 @@ public class HotelPaymentService {
     private final WebClient.Builder webClient;
     private final String URI = "http://payment-service/payment";
 
-    public PaymentResponse getPaymentById(int id) {
-        PaymentResponse response = webClient.build()
-                .get()
-                .uri(URI +"/"+ id)
-                .retrieve()
-                .bodyToMono(PaymentResponse.class)
-                .block();
-        if (response == null){
-            throw new IllegalArgumentException("Payment Service could not load payment with id " + id + "!");
-        }
-        else{
-            log.info("The payment with id {} was successfully retrieved from Payment Service!", id);
-            return response;
-        }
-    }
-
-    public List<PaymentResponse> getAll() {
-        PaymentResponse[] response = webClient.build()
-                .get()
-                .uri(URI + "/all")
-                .retrieve()
-                .bodyToMono(PaymentResponse[].class)
-                .block();
-        if (response == null){
-            throw new IllegalArgumentException("Payment Service could not load a list of payments!");
-        }
-        else{
-            log.info("The list of payments was successfully retrieved from Payment Service!");
-            return Arrays.stream(response).toList();
-        }
-    }
-
     @CircuitBreaker(name = "save-payment", fallbackMethod = "savePaymentFallBack")
     public PaymentResponse save(PaymentRequest request) {
         return webClient.build()

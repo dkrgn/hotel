@@ -29,18 +29,10 @@ spring:
         uri: lb://auth-service
         predicates[0]: Path=/register
       routes[6]:
-        id: hotel-payment-service
-        uri: lb://hotel-service
-        predicates[0]: Path=/payment-api/**
-      routes[7]:
-        id: hotel-notification-service
-        uri: lb://hotel-service
-        predicates[0]: Path=/notification-api/**
-      routes[8]:
         id: hotel-booking-service
         uri: lb://hotel-service
         predicates[0]: Path=/booking-api/**
-      routes[9]:
+      routes[7]:
         id: auth-token-service
         uri: lb://auth-service
         predicates[0]: Path=/token/**

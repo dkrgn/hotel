@@ -46,11 +46,6 @@ public class RoomController {
         return ResponseEntity.ok(roomService.changeAvailability(id, isAvailable));
     }
 
-    @GetMapping(params = "capacity")
-    public ResponseEntity<List<RoomResponse>> getRoomWithCapacity(@RequestParam("capacity") int capacity){
-        return ResponseEntity.ok(roomService.getRoomWithCapacity(capacity));
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<RoomResponse> saveRoom(@RequestBody RoomRequest request) {
@@ -60,10 +55,5 @@ public class RoomController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deleteRoom(@PathVariable int id) {
         return ResponseEntity.ok(roomService.deleteRoom(id));
-    }
-
-    @GetMapping(params = "type")
-    public ResponseEntity<List<RoomResponse>> getRoomsByType(@RequestParam("type") RoomType type){
-        return ResponseEntity.ok(roomService.getRoomByType(type));
     }
 }

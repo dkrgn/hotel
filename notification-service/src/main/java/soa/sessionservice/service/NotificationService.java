@@ -18,34 +18,12 @@ public class NotificationService {
 
     private final NotificationRepo notificationRepo;
 
-    private NotificationResponse buildResponse(Notification notification) {
-        return NotificationResponse.builder()
-                .id(notification.getId())
-                .userId(notification.getUserId())
-                .message(notification.getMessage())
-                .email(notification.getEmail())
-                .build();
-    }
-
-    public NotificationResponse getNotificationById(int id){
-        Notification notification = notificationRepo.getNotificationById(id).orElseThrow(
-                () -> new IllegalArgumentException("Get notification with id " + id + " request resulted in error. Please try again."));
-        return buildResponse(notification);
-    }
-
-    public List<NotificationResponse> getAll(){
-        List<Notification> notification = notificationRepo.getAll().orElseThrow(
-                () -> new IllegalArgumentException("Get all notifications request resulted in error. Please try again."));
-        return notification.stream().map(this::buildResponse).collect(Collectors.toList());
-    }
-
     public NotificationResponse save(NotificationRequest request) {
         Notification notification = Notification.builder()
-                .userId(request.getUserId())
+                .bookingId(request.getBookingId())
                 .message(request.getMessage())
                 .email(request.getEmail())
                 .build();
-        //TODO: Make a real implementation of email notification?
         log.info("Sending a message: " + notification.getMessage());
         notificationRepo.save(notification);
         Notification fromDB = notificationRepo.getNotificationById(notification.getId()).orElseThrow(
@@ -54,9 +32,20 @@ public class NotificationService {
         return buildResponse(fromDB);
     }
 
-    public Integer deleteNotificationByUserId(int id) {
-        Notification notification = notificationRepo.getNotificationByUserId(id);
+    public Integer deleteNotificationByBookingId(int id) {
+        Notification notification = notificationRepo.getNotificationByBookingId(id).orElseThrow(
+                () -> new IllegalArgumentException("Notification with booking id " + id + " could not be retrieved from the db!")
+        );
         notificationRepo.delete(notification);
-        return notification.getId();
+        return id;
+    }
+
+    private NotificationResponse buildResponse(Notification notification) {
+        return NotificationResponse.builder()
+                .id(notification.getId())
+                .bookingId(notification.getBookingId())
+                .message(notification.getMessage())
+                .email(notification.getEmail())
+                .build();
     }
 }

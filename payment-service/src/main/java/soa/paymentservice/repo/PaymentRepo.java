@@ -14,12 +14,9 @@ public interface PaymentRepo extends JpaRepository<Payment, Integer> {
     @Query(value = "SELECT * FROM payments WHERE id = :id", nativeQuery = true)
     Optional<Payment> getPaymentById(int id);
 
-    @Query(value = "SELECT * FROM payments", nativeQuery = true)
-    Optional<List<Payment>> getAll();
-
-    @Query(value = "DELETE FROM payments WHERE user_id = :id", nativeQuery = true)
+    @Query(value = "DELETE FROM payments WHERE room_id = :id", nativeQuery = true)
     @Transactional
     @Modifying
-    Optional<Integer> deletePaymentsByUserId(int id);
+    Optional<Integer> deletePaymentsByRoomId(int id);
 
 }

@@ -34,37 +34,6 @@ public class HotelUserService {
         }
     }
 
-    public UserResponse getUserByEmail(String email) {
-        UserResponse response = webClient.build()
-                .get()
-                .uri(URI + "/email=" + email)
-                .header("Accept", "application/json")
-                .retrieve()
-                .bodyToMono(UserResponse.class)
-                .block();
-        if (response == null) {
-            throw new IllegalArgumentException("User Service could not find user with email " + email + "!");
-        } else {
-            log.info("The user with id {} was successfully found in User Service!", email);
-            return response;
-        }
-    }
-
-    public List<UserResponse> getAll() {
-        UserResponse[] response = webClient.build()
-                .get()
-                .uri(URI + "/all")
-                .retrieve()
-                .bodyToMono(UserResponse[].class)
-                .block();
-        if (response == null) {
-            throw new IllegalArgumentException("User Service could not load list of users!");
-        } else {
-            log.info("The list of users was successfully retrieved from User Service!");
-            return Arrays.stream(response).toList();
-        }
-    }
-
     public UserResponse saveUser(UserRequest request) {
         UserResponse response = webClient.build()
                 .post()

@@ -14,11 +14,6 @@ public interface NotificationRepo extends JpaRepository<Notification, Integer> {
     @Query(value = "SELECT * FROM notifications WHERE id = :id", nativeQuery = true)
     Optional<Notification> getNotificationById(int id);
 
-    @Query(value = "SELECT * FROM notifications", nativeQuery = true)
-    Optional<List<Notification>> getAll();
-
-    @Query(value = "SELECT * FROM notifications WHERE user_id = :id", nativeQuery = true)
-    @Modifying
-    @Transactional
-    Notification getNotificationByUserId(int id);
+    @Query(value = "SELECT * FROM notifications WHERE booking_id = :id", nativeQuery = true)
+    Optional<Notification> getNotificationByBookingId(int id);
 }

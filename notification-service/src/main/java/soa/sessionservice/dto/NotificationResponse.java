@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NotificationResponse {
     private int id;
-    private int userId;
+    private int bookingId;
     private String message;
     private String email;
 }

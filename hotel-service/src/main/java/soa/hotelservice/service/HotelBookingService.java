@@ -1,7 +1,6 @@
 package soa.hotelservice.service;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,10 +11,12 @@ import soa.hotelservice.dto.booking.BookingResponse;
 import soa.hotelservice.dto.notification.NotificationRequest;
 import soa.hotelservice.dto.payment.PaymentResponse;
 import soa.hotelservice.dto.room.RoomResponse;
-import soa.hotelservice.event.BookingEventRequest;
-import soa.hotelservice.event.BookingEventResponse;
+import soa.hotelservice.dto.user.UserResponse;
+import soa.hotelservice.event.EditBookingEventResponse;
+import soa.hotelservice.event.MakeBookingEventRequest;
+import soa.hotelservice.event.MakeBookingEventResponse;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,26 +31,26 @@ public class HotelBookingService {
     private final HotelRoomService roomService;
 
     @CircuitBreaker(name = "make-booking", fallbackMethod = "fallBackDeletePayment")
-    public BookingEventResponse makeBooking(BookingEventRequest request) {
+    public MakeBookingEventResponse makeBooking(MakeBookingEventRequest request) {
         PaymentResponse paymentResponse = paymentService.save(request.getPaymentRequest());
         if (paymentResponse.getId() != 0) {
             request.getBookingRequest().setPaymentId(paymentResponse.getId());
             BookingResponse bookingResponse = saveBooking(request.getBookingRequest());
             roomService.changeAvailability(bookingResponse.getRoomId(), false);
             notificationService.save(new NotificationRequest(
-                    paymentResponse.getUserId(),
+                    bookingResponse.getId(),
                     "Booking was successfully saved with id " + bookingResponse.getId(),
                     request.getEmail()));
-            return new BookingEventResponse(paymentResponse, bookingResponse, request.getEmail());
+            return new MakeBookingEventResponse(paymentResponse, bookingResponse, request.getEmail());
         } else {
             log.error("Payment could not be processed, error occurred!");
-            return new BookingEventResponse();
+            return new MakeBookingEventResponse();
         }
     }
 
-    public BookingEventResponse fallBackDeletePayment(BookingEventRequest request, RuntimeException e) {
+    public MakeBookingEventResponse fallBackDeletePayment(MakeBookingEventRequest request, RuntimeException e) {
         paymentService.deletePaymentsWithUserId(request.getBookingRequest().getUserId());
-        return new BookingEventResponse();
+        return new MakeBookingEventResponse();
     }
 
     public BookingResponse saveBooking(BookingRequest request) {
@@ -69,7 +70,7 @@ public class HotelBookingService {
         }
     }
 
-    public Integer deleteBookingsByUserId(int id) {
+    public Integer deleteAllBookingsByUserId(int id) {
         BookingResponse[] bookingResponse = webClient.build()
                 .get()
                 .uri(URI + "/" + id)
@@ -77,11 +78,8 @@ public class HotelBookingService {
                 .bodyToMono(BookingResponse[].class)
                 .block();
         if (bookingResponse != null) {
-            for (BookingResponse resp : bookingResponse) {
-                roomService.changeAvailability(resp.getRoomId(), true);
-                paymentService.deletePaymentsWithUserId(id);
-                notificationService.deleteNotificationsByUserId(id);
-                deleteBookings(id);
+            for (BookingResponse response : bookingResponse) {
+                deleteBookingById(response.getId(), response.getRoomId());
             }
             return bookingResponse.length;
         } else {
@@ -89,12 +87,59 @@ public class HotelBookingService {
         }
     }
 
-    public void deleteBookings(int userId) {
+    public void delete(int id) {
         webClient.build()
                 .delete()
-                .uri(URI + "/" + userId)
+                .uri(URI + "/" + id)
                 .retrieve()
                 .bodyToMono(Integer.class)
                 .block();
+    }
+
+    public void fullDeletion(int bookingId, int roomId) {
+        roomService.changeAvailability(roomId, true);
+        paymentService.deletePaymentsWithUserId(roomId);
+        notificationService.deleteNotificationsByBookingId(bookingId);
+        delete(bookingId);
+    }
+
+    public Integer deleteBookingById(int bookingId, int roomId) {
+        fullDeletion(bookingId, roomId);
+        return bookingId;
+    }
+
+    public List<EditBookingEventResponse> getBookingsAndRoomsByUserId(int userId) {
+        BookingResponse[] bookingResponse = webClient.build()
+                .get()
+                .uri(URI + "/" + userId)
+                .retrieve()
+                .bodyToMono(BookingResponse[].class)
+                .block();
+        if (bookingResponse == null){
+            throw new IllegalArgumentException("Booking Service could not load booking with user id " + userId + "!");
+        } else {
+            List<EditBookingEventResponse> eventResponseList = new ArrayList<>();
+            for (BookingResponse response : bookingResponse) {
+                eventResponseList.add(new EditBookingEventResponse(response, roomService.getRoomById(response.getRoomId())));
+                log.info("The booking with id {} was successfully retrieved from Booking Service!", response.getId());
+            }
+            return eventResponseList;
+        }
+    }
+
+    public BookingResponse editBooking(int id, BookingRequest request) {
+        BookingResponse response = webClient.build()
+                .put()
+                .uri(URI + "/" + id)
+                .body(BodyInserters.fromValue(request))
+                .retrieve()
+                .bodyToMono(BookingResponse.class)
+                .block();
+        if (response == null) {
+            throw new IllegalArgumentException("Booking Service could not edit booking with id " + id);
+        } else {
+            log.info("The booking with id {} was successfully edited in Booking Service!", id);
+            return response;
+        }
     }
 }

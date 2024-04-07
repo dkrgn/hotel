@@ -9,11 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import soa.userservice.dto.UserRequest;
 import soa.userservice.dto.UserResponse;
-import soa.userservice.models.User;
-import soa.userservice.repositories.UserRepo;
 import soa.userservice.services.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

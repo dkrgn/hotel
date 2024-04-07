@@ -18,28 +18,6 @@ public class PaymentService {
 
     private final PaymentRepo paymentRepo;
 
-    public PaymentResponse getPaymentById(int id) {
-        Payment payment = paymentRepo.getPaymentById(id).orElseThrow(
-                () -> new IllegalArgumentException("Get payment with id " + id + " request resulted in error. Please try again."));
-        return buildResponse(payment);
-    }
-
-    public List<PaymentResponse> getAll() {
-        List<Payment> list = paymentRepo.getAll().orElseThrow(
-                () -> new IllegalArgumentException("Get all payments request resulted in error. Please try again."));
-        return list.stream().map(this::buildResponse).collect(Collectors.toList());
-    }
-
-    private PaymentResponse buildResponse(Payment payment) {
-        return PaymentResponse.builder()
-                .id(payment.getId())
-                .userId(payment.getUserId())
-                .roomId(payment.getRoomId())
-                .type(payment.getType())
-                .issuedAt(payment.getIssuedAt())
-                .build();
-    }
-
     public PaymentResponse save(PaymentRequest request) {
         Payment payment = Payment.builder()
                 .userId(request.getUserId())
@@ -55,10 +33,19 @@ public class PaymentService {
         return buildResponse(fromDB);
     }
 
-    public Integer deletePaymentByUserId(int id) {
-        Integer response = paymentRepo.deletePaymentsByUserId(id).orElseThrow(
-                () -> new IllegalArgumentException("Either no payments with user_id" + id + " or error occurred!")
+    public Integer deletePaymentByRoomId(int id) {
+        return paymentRepo.deletePaymentsByRoomId(id).orElseThrow(
+                () -> new IllegalArgumentException("Either no payments with room_id" + id + " or error occurred!")
         );
-        return response;
+    }
+
+    private PaymentResponse buildResponse(Payment payment) {
+        return PaymentResponse.builder()
+                .id(payment.getId())
+                .userId(payment.getUserId())
+                .roomId(payment.getRoomId())
+                .type(payment.getType())
+                .issuedAt(payment.getIssuedAt())
+                .build();
     }
 }

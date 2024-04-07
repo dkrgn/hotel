@@ -17,23 +17,14 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<NotificationResponse> getPaymentById(@PathVariable("id") int id) {
-        return ResponseEntity.ok(notificationService.getNotificationById(id));
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<NotificationResponse>> getAll() {
-        return ResponseEntity.ok(notificationService.getAll());
-    }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<NotificationResponse> savePayment(@RequestBody NotificationRequest request) {
+    public ResponseEntity<NotificationResponse> saveNotification(@RequestBody NotificationRequest request) {
         return ResponseEntity.ok(notificationService.save(request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Integer> deleteNotificationByUserId(@PathVariable("id") int id) {
-        return ResponseEntity.ok(notificationService.deleteNotificationByUserId(id));
+    public ResponseEntity<Integer> deleteNotificationByBookingId(@PathVariable("id") int id) {
+        return ResponseEntity.ok(notificationService.deleteNotificationByBookingId(id));
     }
 }

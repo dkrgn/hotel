@@ -16,9 +16,9 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "user_id",
+    @Column(name = "booking_id",
             nullable = false)
-    private int userId;
+    private int bookingId;
 
     @Column(name = "message", columnDefinition = "TEXT")
     private String message;

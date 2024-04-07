@@ -16,8 +16,7 @@ public interface BookingRepo extends JpaRepository<Booking, Integer> {
     @Query(value = "SELECT * FROM bookings WHERE id = :id", nativeQuery = true)
     Optional<Booking> getBookingById(int id);
 
+
     @Query(value = "SELECT * FROM bookings WHERE user_id = :id", nativeQuery = true)
-    @Modifying
-    @Transactional
-    Optional<List<Booking>> getBookingsByUserId(int id);
+    Optional<List<Booking>> getAllBookingsByUserId(int id);
 }

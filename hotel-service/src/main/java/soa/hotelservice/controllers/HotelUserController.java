@@ -25,12 +25,6 @@ public class HotelUserController {
         return ResponseEntity.ok(hotelUserService.getUserById(id));
     }
 
-    @GetMapping("/all")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<UserResponse>> getAll() {
-        return ResponseEntity.ok(hotelUserService.getAll());
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponse> saveUser(

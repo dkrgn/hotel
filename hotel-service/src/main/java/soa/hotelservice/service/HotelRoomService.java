@@ -31,25 +31,9 @@ public class HotelRoomService {
         if (response == null){
             throw new IllegalArgumentException("Room Service could not load room with id " + id + "!");
         }
-        else{
+        else {
             log.info("The room with id {} was successfully retrieved from Room Service!", id);
             return response;
-        }
-    }
-
-    public List<RoomResponse> getAll(){
-        RoomResponse[] response = webClient.build()
-                .get()
-                .uri(URI + "/all")
-                .retrieve()
-                .bodyToMono(RoomResponse[].class)
-                .block();
-        if (response == null){
-            throw new IllegalArgumentException("Room Service could not load a list of rooms!");
-        }
-        else{
-            log.info("The list of rooms was successfully retrieved from Room Service!");
-            return Arrays.stream(response).toList();
         }
     }
 
@@ -65,22 +49,6 @@ public class HotelRoomService {
         }
         else{
             log.info("The list of available rooms was successfully retrieved from Room Service!");
-            return Arrays.stream(response).toList();
-        }
-    }
-
-    public List<RoomResponse> getRoomWithCapacity(int capacity){
-        RoomResponse[] response = webClient.build()
-                .get()
-                .uri(URI + "?capacity=" + capacity)
-                .retrieve()
-                .bodyToMono(RoomResponse[].class)
-                .block();
-        if (response == null){
-            throw new IllegalArgumentException("Room Service could not load a list of rooms with capacity " + capacity + "!");
-        }
-        else{
-            log.info("The list of rooms with capacity {} was successfully retrieved from Room Service!", capacity);
             return Arrays.stream(response).toList();
         }
     }
@@ -115,22 +83,6 @@ public class HotelRoomService {
         else{
             log.info("The room with id {} was deleted from Room Service!", id);
             return response;
-        }
-    }
-
-    public List<RoomResponse> getRoomByType(RoomType type){
-        RoomResponse[] response = webClient.build()
-                .get()
-                .uri(URI + "?type=" + type.name())
-                .retrieve()
-                .bodyToMono(RoomResponse[].class)
-                .block();
-        if (response == null){
-            throw new IllegalArgumentException("Room Service could not load a list of rooms with type " + type.name() + "!");
-        }
-        else{
-            log.info("The list of rooms with type {} was successfully retrieved from Room Service!", type.name());
-            return Arrays.stream(response).toList();
         }
     }
 

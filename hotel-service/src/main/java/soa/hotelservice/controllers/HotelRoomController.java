@@ -25,22 +25,10 @@ public class HotelRoomController {
         return ResponseEntity.ok(hotelRoomService.getRoomById(id));
     }
 
-    @GetMapping("/all")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<RoomResponse>> getAll() {
-        return ResponseEntity.ok(hotelRoomService.getAll());
-    }
-
     @GetMapping("/available")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<RoomResponse>> getAvailable() {
         return ResponseEntity.ok(hotelRoomService.getAvailable());
-    }
-
-    @GetMapping(params = "capacity")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<RoomResponse>> getRoomWithCapacity(@RequestParam("capacity") int capacity){
-        return ResponseEntity.ok(hotelRoomService.getRoomWithCapacity(capacity));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -53,11 +41,4 @@ public class HotelRoomController {
     public ResponseEntity<Integer> deleteRoom(@PathVariable int id) {
         return ResponseEntity.ok(hotelRoomService.deleteRoom(id));
     }
-
-    @GetMapping(params = "type")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<RoomResponse>> getRoomsByType(@RequestParam("type") RoomType type){
-        return ResponseEntity.ok(hotelRoomService.getRoomByType(type));
-    }
-
 }

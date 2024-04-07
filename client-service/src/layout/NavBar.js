@@ -1,19 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
     const navigate = useNavigate();
+
+    if (localStorage.getItem("token_id") !== null) {
+        setInterval(async function() {
+            logout()
+        }, 1000 * 60 * 60);
+    }
+
     function logout() {
         clearToken();
         localStorage.clear();
-        navigate("/");
+        navigate("/login");
     }
 
     const clearToken = async () => {
-        const response = await axios.delete("http://localhost:8080/token/" + localStorage.getItem("token_id"));
-        console.log(response.data);
+        axios.delete("http://localhost:8080/token/" + localStorage.getItem("token_id"))
+        .then(response => console.log(response.data))
+        .catch(e => console.log(e));
     }
 
     return (

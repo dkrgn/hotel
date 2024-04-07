@@ -1,12 +1,9 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
 import NavBar from "../../layout/NavBar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
-import "../../pages/rooms/Room.css";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { React, useState } from "react";
+import "../auth/Auth.css";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 export default function Booking() {
     const { state } = useLocation();
@@ -17,7 +14,8 @@ export default function Booking() {
     return (
         <div>
             <NavBar/>
-            <div className="d-flex align-items-center justify-content-center">
+            <h1>Choose your preferred dates:</h1>
+            <div className="wrapper">
                 <div className="room-card border shadow">
                     <div className="room-details">
                         <h3>{room.type}</h3>
@@ -26,39 +24,45 @@ export default function Booking() {
                     </div>
                 </div>
                 <div>
-                    <DatePicker
-                    className="border shadow"
-                    selectsStart
-                    format="yyyy-MM-dd'T'HH:mm:ss.SSS"
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    startDate={startDate}
-                    minDate={startDate}
-                    required
-                    />
-                    <br/>
-                    <DatePicker
-                        className="border shadow"
-                        selectsEnd
-                        format="yyyy-MM-dd'T'HH:mm:ss.SSS"
-                        selected={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        endDate={endDate}
+                        <h5>Choose a start date:</h5>
+                        <DatePicker
+                        timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
+                        className="border shadow float-left"
+                        selectsStart
+                        format="yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
                         startDate={startDate}
                         minDate={startDate}
                         required
-                    />
-                    <br/>
+                        />
+                    </div>
+                    <div>
+                        <h5>Choose an end date:</h5>
+                        <DatePicker
+                            timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
+                            className="float-left border shadow"
+                            selectsEnd
+                            format="yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            endDate={endDate}
+                            startDate={startDate}
+                            minDate={startDate}
+                            required
+                        />
                     {startDate && endDate &&
-                        <Link 
-                                className="shadow border"
-                                to={`/payment/${room.id}`}
-                                state={{room : room, startDate: startDate, endDate: endDate}}>
-                                Pay Now
-                        </Link>
+                        <div>
+                            <Link 
+                                    className="shadow border input-box button"
+                                    to={`/payment/${room.id}`}
+                                    state={{room : room, startDate: startDate, endDate: endDate}}>
+                                    Pay Now
+                            </Link>
+                        </div>
                     }
-                    <div className='input-box button'>
-                        <button onClick={() => navigate(-1)}>Back</button>
+                    <div>
+                        <button className='input-box button mt-3' onClick={() => navigate(-1)}>Back</button>
                     </div>
                 </div>
             </div>

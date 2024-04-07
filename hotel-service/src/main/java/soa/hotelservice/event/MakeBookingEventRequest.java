@@ -9,7 +9,7 @@ import soa.hotelservice.dto.payment.PaymentRequest;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BookingEventRequest {
+public class MakeBookingEventRequest {
 
     private BookingRequest bookingRequest;
     private PaymentRequest paymentRequest;

@@ -9,8 +9,14 @@ export default function Home() {
         loadRooms();
     },[]);
     const loadRooms = async() => {
-        const response = await axios.get("http://localhost:8080/room-api/available");
-        setRooms(response.data);
+        await axios.get("http://localhost:8080/room-api/available")
+        .then(res => {
+            console.log(res.data);
+            setRooms(res.data);
+        })
+        .catch(e => {
+            console.log(e);
+        });
     }
     return (
         <div>

@@ -17,8 +17,8 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<BookingResponse>> getBookingsByUserId(@PathVariable("id") int id) {
-        return ResponseEntity.ok(bookingService.getBookingsByUserId(id));
+    public ResponseEntity<List<BookingResponse>> getAllBookingsByUserId(@PathVariable("id") int id) {
+        return ResponseEntity.ok(bookingService.getAllBookingsByUserId(id));
     }
 
     @PostMapping
@@ -26,8 +26,16 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.saveBooking(request));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<BookingResponse> editBooking(
+            @PathVariable("id") int id,
+            @RequestBody BookingRequest request
+    ) {
+        return ResponseEntity.ok(bookingService.editBooking(id, request));
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Integer> deleteBookingsByUserId(@PathVariable("id") int id) {
-        return ResponseEntity.ok(bookingService.deleteBookingsByUserId(id));
+    public ResponseEntity<Integer> deleteBookingById(@PathVariable("id") int id) {
+        return ResponseEntity.ok(bookingService.deleteBookingById(id));
     }
 }

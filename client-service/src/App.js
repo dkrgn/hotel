@@ -8,12 +8,9 @@ import MyBooking from "./pages/user/MyBooking";
 import EditUser from "./pages/user/EditUser";
 import Booking from "./pages/booking/Booking";
 import Payment from './pages/payment/Payment';
-import axios from 'axios';
+import EditMyBooking from './pages/user/EditMyBooking';
 
 function App() {
-  if (localStorage.getItem("token_id") !== null) {
-    setInterval(async function() {await axios.delete('http://localhost:8080/token/' + localStorage.getItem("token_id"));}, 1000 * 60 * 60);
-  }
   return (
     <div className="App">
         <Routes>
@@ -25,6 +22,7 @@ function App() {
           <Route exact path='/booking/:id' element={<Booking/>}/>
           <Route exact path='/payment/:id' element={<Payment/>}/>
           <Route exact path='/edituser' element={<EditUser/>}/>
+          <Route exact path='/editbooking' element={<EditMyBooking/>}/>
         </Routes>
     </div>
   );

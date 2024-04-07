@@ -7,8 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import soa.roomservice.dto.RoomRequest;
 import soa.roomservice.dto.RoomResponse;
 import soa.roomservice.models.Room;
-import soa.roomservice.models.RoomType;
-import soa.roomservice.repositories.RoomRepo;
+import soa.roomservice.repo.RoomRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,12 +43,6 @@ public class RoomService {
         );
     }
 
-    public List<RoomResponse> getRoomWithCapacity(int capacity){
-        List<Room> r = roomRepo.getRoomWithCapacity(capacity).orElseThrow(
-                () -> new IllegalArgumentException("Get room with capacity " + capacity + " request resulted in error. Please try again."));
-        return r.stream().map(this::buildResponse).collect(Collectors.toList());
-    }
-
     public RoomResponse saveRoom(RoomRequest r){
         Room room = Room.builder()
                 .roomNumber(r.getRoomNumber())
@@ -72,12 +65,6 @@ public class RoomService {
         roomRepo.delete(room);
         log.info("The room with id {} was successfully deleted!", room.getId());
         return room.getId();
-    }
-
-    public List<RoomResponse> getRoomByType(RoomType type){
-        List<Room> r = roomRepo.getRoomsByType(type.name()).orElseThrow(
-                () -> new IllegalArgumentException("Get room with type " + type.name() + " request resulted in error. Please try again.\""));
-        return r.stream().map(this::buildResponse).collect(Collectors.toList());
     }
 
     private RoomResponse buildResponse(Room r){

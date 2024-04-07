@@ -18,23 +18,13 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PaymentResponse> getPaymentById(@PathVariable("id") int id) {
-        return ResponseEntity.ok(paymentService.getPaymentById(id));
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<PaymentResponse>> getAll() {
-        return ResponseEntity.ok(paymentService.getAll());
-    }
-
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PaymentResponse> savePayment(@RequestBody PaymentRequest request) {
         return ResponseEntity.ok(paymentService.save(request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Integer> deletePaymentByUserId(@PathVariable("id") int id) {
-        return ResponseEntity.ok(paymentService.deletePaymentByUserId(id));
+    public ResponseEntity<Integer> deletePaymentByRoomId(@PathVariable("id") int id) {
+        return ResponseEntity.ok(paymentService.deletePaymentByRoomId(id));
     }
 }

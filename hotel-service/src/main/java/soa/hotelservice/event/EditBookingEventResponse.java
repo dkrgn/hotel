@@ -1,17 +1,18 @@
 package soa.hotelservice.event;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import soa.hotelservice.dto.booking.BookingResponse;
-import soa.hotelservice.dto.payment.PaymentResponse;
+import soa.hotelservice.dto.room.RoomResponse;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BookingEventResponse {
+@Builder
+public class EditBookingEventResponse {
 
-    private PaymentResponse paymentResponse;
     private BookingResponse bookingResponse;
-    private String email;
+    private RoomResponse roomResponse;
 }
