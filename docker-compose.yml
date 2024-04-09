@@ -1,0 +1,205 @@
+---
+version: '3.7'
+services:
+
+  ## Authentication-Database Service
+  postgres-auth:
+    container_name: pg-auth
+    image: postgres
+    environment:
+      POSTGRES_DB: tokens
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./pg-auth:/data/postgres
+    expose:
+      - "5431"
+    ports:
+      - "5431:5431"
+    command: -p 5431
+    restart: always
+
+  ## Booking-Database Service
+  postgres-booking:
+    container_name: pg-booking
+    image: postgres
+    environment:
+      POSTGRES_DB: bookings
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./pg-booking:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: always
+
+  ## Notification-Database Service
+  postgres-notification:
+    container_name: pg-notification
+    image: postgres
+    environment:
+      POSTGRES_DB: notifications
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./pg-notification:/data/postgres
+    expose:
+      - "5433"
+    ports:
+      - "5433:5433"
+    command: -p 5433
+    restart: always
+
+  ## Payment-Database Service
+  postgres-payment:
+    container_name: pg-payment
+    image: postgres
+    environment:
+      POSTGRES_DB: payments
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./pg-payment:/data/postgres
+    expose:
+      - "5434"
+    ports:
+      - "5434:5434"
+    command: -p 5434
+    restart: always
+
+  ## Room-Database Service
+  postgres-room:
+    container_name: pg-room
+    image: postgres
+    environment:
+      POSTGRES_DB: rooms
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./pg-room:/data/postgres
+    expose:
+      - "5435"
+    ports:
+      - "5435:5435"
+    command: -p 5435
+    restart: always
+
+  ## User-Database Service
+  postgres-user:
+    container_name: pg-user
+    image: postgres
+    environment:
+      POSTGRES_DB: users
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./pg-user:/data/postgres
+    expose:
+      - "5436"
+    ports:
+      - "5436:5436"
+    command: -p 5436
+    restart: always
+
+
+  ## Discovery-Service
+  discovery-service:
+    image: dkrgn/discovery-service-img:latest
+    container_name: discovery-service
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+    ports:
+      - "8761:8761"
+    expose:
+      - "8761"
+
+  ## API_Gateway Service
+  api-gateway:
+    image: dkrgn/api-gateway-img:latest
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    depends_on:
+      - discovery-service
+
+  ## Auth Service
+  auth-service:
+    container_name: auth-service
+    image: dkrgn/auth-service-img:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-auth:5431/tokens
+    depends_on:
+      - discovery-service
+      - api-gateway
+      - postgres-auth
+
+  ## Booking Service
+  booking-service:
+    container_name: booking-service
+    image: dkrgn/booking-service-img:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-booking:5432/bookings
+    depends_on:
+      - postgres-booking
+      - discovery-service
+      - api-gateway
+      - hotel-service
+
+  ## Hotel Service
+  hotel-service:
+    container_name: hotel-service
+    image: dkrgn/hotel-service-img:latest
+    depends_on:
+      - discovery-service
+      - api-gateway
+
+  ## Notification Service
+  notification-service:
+    container_name: notification-service
+    image: dkrgn/notification-service-img:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-notification:5433/notifications
+    depends_on:
+      - discovery-service
+      - api-gateway
+      - postgres-notification
+      - hotel-service
+
+  ## Payment Service
+  payment-service:
+    container_name: payment-service
+    image: dkrgn/payment-service-img:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-payment:5434/payments
+    depends_on:
+      - discovery-service
+      - api-gateway
+      - postgres-payment
+      - hotel-service
+
+  ## Room Service
+  room-service:
+    container_name: room-service
+    image: dkrgn/room-service-img:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-room:5435/rooms
+    depends_on:
+      - discovery-service
+      - api-gateway
+      - postgres-room
+      - hotel-service
+
+  ## User Service
+  user-service:
+    container_name: user-service
+    image: dkrgn/user-service-img:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-user:5436/users
+    depends_on:
+      - discovery-service
+      - api-gateway
+      - postgres-user
+      - hotel-service
+      - auth-service
