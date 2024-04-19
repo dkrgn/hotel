@@ -1,6 +1,5 @@
 package soa.roomservice.controllers;
 
-import jakarta.ws.rs.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -8,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import soa.roomservice.dto.RoomRequest;
 import soa.roomservice.dto.RoomResponse;
-import soa.roomservice.models.RoomType;
 import soa.roomservice.services.RoomService;
 
 import java.util.List;

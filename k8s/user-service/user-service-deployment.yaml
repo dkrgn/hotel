@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: dkrgn/user-service-img:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: pg-user-config
+                  key: host
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: pg-user-config
+                  key: name
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-user-secrets
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-user-secrets
+                  key: postgres_password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service-svc
+spec:
+  selector:
+    app: user-service
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+      nodePort: 30080
+  type: NodePort

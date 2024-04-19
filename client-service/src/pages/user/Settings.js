@@ -14,19 +14,19 @@ export default function Account() {
     }, []);
 
     const loadUser = async () => {
-        await axios.get("http://localhost:8080/user-api/" + localStorage.getItem("user_id"))
+        await axios.get("/user-api/" + localStorage.getItem("user_id"))
         .then(response => setUser(response.data))
         .catch(e => console.log(e));
     }
 
     const clearToken = async () => {
-        await axios.delete("http://localhost:8080/token/" + localStorage.getItem("token_id"))
+        await axios.delete("/token/" + localStorage.getItem("token_id"))
         .then(response => console.log(response.data))
         .catch(e => console.log(e));
     }
 
     const deletion = async() => {
-        await axios.delete("http://localhost:8080/user-api/" + localStorage.getItem("user_id"))
+        await axios.delete("/user-api/" + localStorage.getItem("user_id"))
         .then(response => {
             if (response.data !== null) {
                 console.log("user was deleted!");
@@ -42,7 +42,7 @@ export default function Account() {
     }
 
     const bookingRemoval = async () => {
-        await axios.delete("http://localhost:8080/booking-api/all/" + localStorage.getItem("user_id"))
+        await axios.delete("/booking-api/all/" + localStorage.getItem("user_id"))
         .then(response => {
            if (response === null) {
             console.log("Could not delete user's bookings")

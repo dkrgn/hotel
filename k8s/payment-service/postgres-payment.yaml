@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pg-payment-pvc
+  labels:
+    app: pg-payment
+    tier: database
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-payment-depl
+  labels:
+    app: pg-payment
+    tier: database
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-payment
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pg-payment
+        tier: database
+    spec:
+      containers:
+        - name: pg-payment
+          image: postgres:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-payment-secrets
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-payment-secrets
+                  key: postgres_password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: pg-payment-config
+                  key: name
+          ports:
+            - containerPort: 5432
+              name: postgres
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pg-payment-storage
+      restartPolicy: Always
+      volumes:
+        - name: pg-payment-storage
+          persistentVolumeClaim:
+            claimName: pg-payment-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pg-payment
+    tier: database
+  name: pg-payment-svc
+
+spec:
+  ports:
+    - port: 5434
+      targetPort: 5432
+  selector:
+    app: pg-payment
+    tier: database
+  type: ClusterIP

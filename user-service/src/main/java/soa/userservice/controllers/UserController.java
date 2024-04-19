@@ -1,7 +1,7 @@
 package soa.userservice.controllers;
 
 import jakarta.validation.Valid;
-import jakarta.ws.rs.PathParam;
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

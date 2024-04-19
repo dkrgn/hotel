@@ -19,7 +19,7 @@ export default function NavBar() {
     }
 
     const clearToken = async () => {
-        axios.delete("http://localhost:8080/token/" + localStorage.getItem("token_id"))
+        axios.delete("/token/" + localStorage.getItem("token_id"))
         .then(response => console.log(response.data))
         .catch(e => console.log(e));
     }

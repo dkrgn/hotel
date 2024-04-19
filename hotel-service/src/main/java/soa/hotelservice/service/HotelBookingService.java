@@ -25,7 +25,7 @@ import java.util.List;
 public class HotelBookingService {
 
     private final WebClient.Builder webClient;
-    private final String URI = "http://booking-service/booking";
+    private final String URI = "http://booking-service-svc:8087/booking";
     private final HotelPaymentService paymentService;
     private final HotelNotificationService notificationService;
     private final HotelRoomService roomService;

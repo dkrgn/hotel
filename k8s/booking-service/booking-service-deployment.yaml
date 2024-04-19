@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-service-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booking-service
+  template:
+    metadata:
+      labels:
+        app: booking-service
+    spec:
+      containers:
+        - name: booking-service
+          image: dkrgn/booking-service-img:latest
+          ports:
+            - containerPort: 8087
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: pg-booking-config
+                  key: host
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: pg-booking-config
+                  key: name
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-booking-secrets
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-booking-secrets
+                  key: postgres_password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booking-service-svc
+spec:
+  selector:
+    app: booking-service
+  ports:
+    - protocol: TCP
+      port: 8087
+      targetPort: 8087
+  type: ClusterIP

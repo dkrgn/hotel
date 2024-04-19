@@ -24,7 +24,7 @@ export default function EditMyBooking() {
             start : start, 
             end : end
         };
-        axios.put('http://localhost:8080/booking-api/' + data.id, request)
+        axios.put('/booking-api/' + data.id, request)
         .then(response => {
             let data = response.data;
             console.log(data);

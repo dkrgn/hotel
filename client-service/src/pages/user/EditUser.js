@@ -31,7 +31,7 @@ export default function EditUser() {
         let req_email = form.email.trim() === "" ? state.user.email : form.email;
         let req_password = form.password.trim() === "" ? state.user.password : form.password;
         const request = {firstName : req_fname, lastName : req_lname, mobileNumber : req_number, email : req_email, password : req_password};
-            axios.put('http://localhost:8080/user-api/' + state.user.id, request)
+            axios.put('/user-api/' + state.user.id, request)
             .then(response => {
                 let data = response.data;
                 console.log(data);

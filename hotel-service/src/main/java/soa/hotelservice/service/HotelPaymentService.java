@@ -19,7 +19,7 @@ import java.util.List;
 public class HotelPaymentService {
 
     private final WebClient.Builder webClient;
-    private final String URI = "http://payment-service/payment";
+    private final String URI = "http://payment-service-svc:8084/payment";
 
     @CircuitBreaker(name = "save-payment", fallbackMethod = "savePaymentFallBack")
     public PaymentResponse save(PaymentRequest request) {

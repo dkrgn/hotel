@@ -2,17 +2,13 @@ spring:
   application:
     name: auth-service
   datasource:
-    username: postgres
-    password: password
-    url: jdbc:postgresql://postgres:5431/tokens
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://${DB_HOST}:5431/${DB_NAME}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: create
     show-sql: true
 server:
-  port: 0
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka:password@discovery-service:8761/eureka/
+  port: 8085

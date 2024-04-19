@@ -16,7 +16,7 @@ import soa.authservice.dto.user.UserResponse;
 public class RegistrationService {
 
     private final WebClient.Builder webClient;
-    private static final String URI = "http://user-service/user";
+    private static final String URI = "http://user-service-svc:8081/user";
     private final EmailValidatorService validator;
     private final TokenService tokenService;
 

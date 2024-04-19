@@ -21,7 +21,7 @@ export default function Login() {
     const handleSubmit = (e) => {
         e.preventDefault();
         const request = {email : form.email, password : form.password};
-        axios.post('http://localhost:8080/login', request)
+        axios.post('/login', request)
         .then(response => {
             let data = response.data;
             if (data.canLogin) {

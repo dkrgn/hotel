@@ -1,7 +1,5 @@
 package soa.apigateway.config;
 
-
-
 import io.netty.handler.codec.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

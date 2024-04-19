@@ -26,7 +26,7 @@ export default function Register() {
         e.preventDefault();
         if (form.password === form.confirmPassword) {
             const request = {firstName : form.firstName, lastName : form.lastName, mobileNumber : form.mobileNumber, email : form.email, password : form.password};
-            axios.post('http://localhost:8080/register', request)
+            axios.post('/register', request)
             .then(response => {
                 let data = response.data;
                 console.log(data);

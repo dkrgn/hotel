@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pg-room-pvc
+  labels:
+    app: pg-room
+    tier: database
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-room-depl
+  labels:
+    app: pg-room
+    tier: database
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-room
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pg-room
+        tier: database
+    spec:
+      containers:
+        - name: pg-room
+          image: postgres:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-room-secrets
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-room-secrets
+                  key: postgres_password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: pg-room-config
+                  key: name
+          ports:
+            - containerPort: 5432
+              name: postgres
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pg-room-storage
+      restartPolicy: Always
+      volumes:
+        - name: pg-room-storage
+          persistentVolumeClaim:
+            claimName: pg-room-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pg-room
+    tier: database
+  name: pg-room-svc
+
+spec:
+  ports:
+    - port: 5435
+      targetPort: 5432
+  selector:
+    app: pg-room
+    tier: database
+  type: ClusterIP

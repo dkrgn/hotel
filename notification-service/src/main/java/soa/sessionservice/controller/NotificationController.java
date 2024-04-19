@@ -8,8 +8,6 @@ import soa.sessionservice.dto.NotificationRequest;
 import soa.sessionservice.dto.NotificationResponse;
 import soa.sessionservice.service.NotificationService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/notification")
 @AllArgsConstructor

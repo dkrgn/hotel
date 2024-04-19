@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pg-notification-config
+data:
+  host: 'pg-notification-svc'
+  name: 'notifications'
+  

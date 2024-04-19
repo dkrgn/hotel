@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-service-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel-service
+  template:
+    metadata:
+      labels:
+        app: hotel-service
+    spec:
+      containers:
+        - name: hotel-service
+          image: dkrgn/hotel-service-img:latest
+          ports:
+            - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-service-svc
+spec:
+  selector:
+    app: hotel-service
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+  type: ClusterIP

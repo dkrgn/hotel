@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export default function MyBooking() {
     const [editBooking, setEditBookings] = useState(null);
     const loadEditBookings = async () => {
-        await axios.get("http://localhost:8080/booking-api/" + localStorage.getItem("user_id"))
+        await axios.get("/booking-api/" + localStorage.getItem("user_id"))
         .then(response => {
             console.log(response.data);
             setEditBookings(response.data);
@@ -29,7 +29,7 @@ export default function MyBooking() {
     }
 
     const bookingRemoval = async(b_id, r_id) => {
-        const response = await axios.delete("http://localhost:8080/booking-api/" + b_id + "/" + r_id);
+        const response = await axios.delete("/booking-api/" + b_id + "/" + r_id);
         if (response.data !== null) {
             alert("Booking was successfully deleted!");
         }

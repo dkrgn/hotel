@@ -1,0 +1,43 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: user-k8s-specs
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-k8s-depl
+  namespace: user-k8s-specs
+spec:
+  selector:
+    matchLabels:
+      app: user-k8s-depl
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: dkrgn/user-service-img:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-k8s-svc
+  namespace: user-k8s-specs
+spec:
+  selector:
+    app: user-k8s-specs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---

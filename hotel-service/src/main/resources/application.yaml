@@ -1,12 +1,8 @@
 spring:
   application:
-    name: hotel-service
+    name: hotel-service-svc
 server:
-  port: 0
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka:password@discovery-service:8761/eureka/
+  port: 8082
 
 management:
   health:

@@ -19,7 +19,7 @@ import java.util.List;
 public class HotelRoomService {
 
     private final WebClient.Builder webClient;
-    private final String URI = "http://room-service/room";
+    private final String URI = "http://room-service-svc:8083/room";
 
     public RoomResponse getRoomById(int id){
         RoomResponse response = webClient.build()

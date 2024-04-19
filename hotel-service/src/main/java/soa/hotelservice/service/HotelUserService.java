@@ -17,7 +17,7 @@ import java.util.List;
 public class HotelUserService {
 
     private final WebClient.Builder webClient;
-    private static final String URI = "http://user-service/user";
+    private static final String URI = "http://user-service-svc:8081/user";
 
     public UserResponse getUserById(int id) {
         UserResponse response = webClient.build()

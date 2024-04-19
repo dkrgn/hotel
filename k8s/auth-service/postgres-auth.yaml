@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pg-auth-pvc
+  labels:
+    app: pg-auth
+    tier: database
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-auth-depl
+  labels:
+    app: pg-auth
+    tier: database
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-auth
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pg-auth
+        tier: database
+    spec:
+      containers:
+        - name: pg-auth
+          image: postgres:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-auth-secrets
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-auth-secrets
+                  key: postgres_password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: pg-auth-config
+                  key: name
+          ports:
+            - containerPort: 5431
+              name: postgres
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pg-auth-storage
+      restartPolicy: Always
+      volumes:
+        - name: pg-auth-storage
+          persistentVolumeClaim:
+            claimName: pg-auth-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pg-auth
+    tier: database
+  name: pg-auth-svc
+
+spec:
+  ports:
+    - port: 5431
+      targetPort: 5432
+  selector:
+    app: pg-auth
+    tier: database
+  type: ClusterIP

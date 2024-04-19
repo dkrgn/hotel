@@ -18,7 +18,7 @@ public class HotelNotificationService {
 
     private final WebClient.Builder webClient;
 
-    private final String URI = "http://notification-service/notification";
+    private final String URI = "http://notification-service-svc:8086/notification";
 
     public void save(NotificationRequest request) {
         try {

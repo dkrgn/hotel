@@ -58,7 +58,7 @@ export default function Payment() {
     }
 
     const post = async (request) => {
-        axios.post('http://localhost:8080/booking-api', request)
+        axios.post('/booking-api', request)
         .then(response => {
             if (response.paymentResponse === null || response.bookinResponse === null) {
                 alert("Error occurred! Could not process payment and booking.")

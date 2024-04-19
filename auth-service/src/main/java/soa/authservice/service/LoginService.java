@@ -17,7 +17,7 @@ import soa.authservice.model.Token;
 public class LoginService {
 
     private final WebClient.Builder webClient;
-    private static final String URI = "http://user-service/user";
+    private static final String URI = "http://user-service-svc:8081/user";
 
     private final TokenService tokenService;
 
