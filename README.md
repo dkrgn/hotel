@@ -1,8 +1,8 @@
 # Hotel Project (Spring Boot Microservice Architecture)
 
 This project implements simple logic of Hotel services. User is able to login/register, edit/delete account, create/edit/delete bookings. The project was implemented to suit Kubernetes deployment. The project can as well be executed with docker-compose on `7ae4087` commit and can be execute as plain Spring Boot services on `e30e68d` commit.
-> Note that Eureka discovery service is included only in docker and plain spring boot versions. In the latest commit with k8s deployment Eureka is excluded (not needed).
-> Also note that client service is not deployed neither in k8s nor in docker compose.
+> Note: Eureka discovery service is included only in docker and plain spring boot versions. In the latest commit with k8s deployment Eureka is excluded (not needed).
+> Note: client service is not deployed neither in k8s nor in docker compose.
 
 ## Steps to deploy app in K8s
 
@@ -33,5 +33,10 @@ values
 7. Navigate to `/src/index.js` file.
 8. Change port in line `axios.defaults.baseURL = "http://localhost:<host>"` instead of `<host>`.
 9. Run `npm start`.
+> Note: to execute this command, `node.js` should be installed to your system. More information can be found [here](https://nodejs.org/en/download).
 10. Naviagate to `localhost:3000`.
 11. If everything was correct, the page should load the home page with 6 rooms. 
+
+## General Information
+
+This app is built with support of Spring Boot frameworks, main dependencies are SpringJpa, SpringCloud, SpringWebFlux, Resilience4J, SpringEureka (not used in k8s deployment), PostgreSQL.
